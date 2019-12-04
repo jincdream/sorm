@@ -1,5 +1,1 @@
-<sorm schema="{{schema}}" style="padding:10px">
-<view slot="items">
-  <fields />
-  </view>
-</sorm>
+<my-component />

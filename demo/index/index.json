@@ -1,6 +1,5 @@
 {
   "usingComponents": {
-    "sorm": "../dist/sorm/sorm",
-    "fields": "../fields/fields"
+    "my-component": "../dist/myComponent/myComponent"
   }
 }
