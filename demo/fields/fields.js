@@ -7,4 +7,3 @@ Component({
   didUnmount() {},
   methods: {},
 });
-  
