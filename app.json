@@ -1,6 +1,6 @@
 {
   "pages": [
-    "demo/index/index"
+    "pages/index/demo"
   ],
   "window": {
     "enableWK": "YES",

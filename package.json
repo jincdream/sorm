@@ -1,10 +1,10 @@
 {
-  "name": "sorm",
+  "name": "miniapp-component-template",
   "version": "0.0.1",
-  "description": "小程序动态表单组件",
+  "description": "小程序组件模板",
   "repository": {
     "type": "git",
-    "url": "git@github.com:jincdream/sorm.git"
+    "url": "git@github.com:jincdream/miniapp-component-template.git"
   },
   "files": [
     "dist"
@@ -49,9 +49,16 @@
     "lint-staged"
   ],
   "lint-staged": {
-   
-  },
-  "dependencies": {
-    "@uform/core": "^1.0.0-alpha.4"
+    "*.ts": [
+      "eslint --ext .ts",
+      "git add"
+    ],
+    "*.js": [
+      "eslint",
+      "git add"
+    ],
+    "*.less": [
+      "stylelint --syntax less"
+    ]
   }
 }
