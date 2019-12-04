@@ -1,0 +1,33 @@
+
+
+<view style="{{style}}" class="{{`sorm_layout ${className}`}}">
+  <view a:for="{{schema}}">
+    <!-- native items -->
+     <field
+        label="{{item.label}}"
+        component="{{item.component}}"
+        layout="{{item.layout}}"
+        fieldEmmiter="{{item.fieldEmmiter}}"
+        fieldListener="{{item.fieldListener}}"
+        saveRef="{{item.saveRef}}"
+      />
+    <!-- custom items -->
+    <view>
+      <slot
+        name="items"
+        label="{{item.label}}"
+        component="{{item.component}}"
+        layout="{{item.layout}}"
+        fieldEmmiter="{{item.fieldEmmiter}}"
+        fieldListener="{{item.fieldListener}}"
+        saveRef="{{item.saveRef}}"
+      />
+    </view>
+    
+  </view>
+
+  <view class="sm_btns">
+    <button class="sm_btn default" type="primary">提交</button>
+    <button class="sm_btn default" type="normal">重置</button>
+  </view>
+</view>
