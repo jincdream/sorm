@@ -1,20 +1,21 @@
-import { createForm } from '@uform/core';
-
 var Sorm =
 /*#__PURE__*/
 function () {
   function Sorm() {
     this.fieldComponents = {};
-    this.initValue = {};
-    this.core = createForm({
-      onChange: function onChange(values) {},
-      //表单提交事件回调
-      onSubmit: function onSubmit(values) {},
-      //表单重置事件回调
-      onReset: function onReset() {},
-      //表单校验失败事件回调
-      onValidateFailed: function onValidateFailed(validated) {}
-    });
+    this.initValue = {}; // this.core = createForm({
+    //   onChange: (values) => {
+    //   },
+    //   //表单提交事件回调
+    //   onSubmit: (values) => {
+    //   },
+    //   //表单重置事件回调
+    //   onReset: () => {
+    //   },
+    //   //表单校验失败事件回调
+    //   onValidateFailed:(validated) => {
+    //   }
+    // })
   }
 
   var _proto = Sorm.prototype;
@@ -38,13 +39,12 @@ function () {
           fieldProps = componentSchemaDesc["x-props"],
           rules = componentSchemaDesc["x-rules"],
           childrenSchema = componentSchemaDesc.properties; // this.initValue[thisKey] = cprops.value
-
-      _this.core.registerField({
-        name: thisKey,
-        initialValue: cprops.value,
-        value: cprops.value,
-        rules: rules
-      });
+      // this.core.registerField({
+      //   name: thisKey,
+      //   initialValue: cprops.value,
+      //   value: cprops.value,
+      //   rules: rules
+      // })
 
       return {
         component: {

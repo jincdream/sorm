@@ -8,29 +8,29 @@ import {
   ISchemaPareserResult
 } from './Share'
 
-import {createForm} from '@uform/core'
+// import {createForm} from '@uform/core'
 
 class Sorm {
   constructor(){
     this.fieldComponents = {}
     this.initValue = {}
-    this.core = createForm({
-      onChange: (values) => {
+    // this.core = createForm({
+    //   onChange: (values) => {
 
-      },
-      //表单提交事件回调
-      onSubmit: (values) => {
+    //   },
+    //   //表单提交事件回调
+    //   onSubmit: (values) => {
 
-      },
-      //表单重置事件回调
-      onReset: () => {
+    //   },
+    //   //表单重置事件回调
+    //   onReset: () => {
 
-      },
-      //表单校验失败事件回调
-      onValidateFailed:(validated) => {
+    //   },
+    //   //表单校验失败事件回调
+    //   onValidateFailed:(validated) => {
 
-      }
-    })
+    //   }
+    // })
   }
   private initValue: any
   private core: any
@@ -55,12 +55,12 @@ class Sorm {
       } = componentSchemaDesc
       // this.initValue[thisKey] = cprops.value
       
-      this.core.registerField({
-        name: thisKey,
-        initialValue: cprops.value,
-        value: cprops.value,
-        rules: rules
-      })
+      // this.core.registerField({
+      //   name: thisKey,
+      //   initialValue: cprops.value,
+      //   value: cprops.value,
+      //   rules: rules
+      // })
 
       return {
         component: {

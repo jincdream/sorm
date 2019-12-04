@@ -3,14 +3,14 @@
 <view style="{{style}}" class="{{`sorm_layout ${className}`}}">
   <view a:for="{{schema}}">
     <!-- native items -->
-     <field
+     <!-- <field
         label="{{item.label}}"
         component="{{item.component}}"
         layout="{{item.layout}}"
         fieldEmmiter="{{item.fieldEmmiter}}"
         fieldListener="{{item.fieldListener}}"
         saveRef="{{item.saveRef}}"
-      />
+      /> -->
     <!-- custom items -->
     <view>
       <slot
