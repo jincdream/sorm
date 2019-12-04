@@ -1,0 +1,21 @@
+.sorm_layout {
+  width: max-content;
+  margin: 0 auto;
+}
+.sorm_layout .sm_btns {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+.sorm_layout .sm_btns .sm_btn.default {
+  padding: 0 12px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 14px;
+}
+.sorm_layout .sm_btns .sm_btn.small {
+  width: 80px;
+}
+.sorm_layout .sm_btns .sm_btn.big {
+  width: 80px;
+}
