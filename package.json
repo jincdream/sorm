@@ -49,7 +49,6 @@
     "lint-staged"
   ],
   "lint-staged": {
-   
   },
   "dependencies": {
     "@uform/core": "^1.0.0-alpha.4"
