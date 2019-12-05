@@ -1,0 +1,10 @@
+ <picker
+  onChange="onChange"
+  value="{{indexValue}}"
+  range="{{dataSource}}"
+  range-key="label">
+  <view class="row">
+    <view class="row-title">地区选择器</view>
+    <view class="row-extra">当前选择：{{labelValue}}</view>
+  </view>
+</picker>

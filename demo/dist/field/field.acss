@@ -1,7 +1,18 @@
-.fld_layout_temp1 {
-  display: flex;
-  align-items: center;
+.fld_layout_temp1 .fld {
+  margin: 0 0 10px 0;
 }
+.fld_layout_temp1 .fld_btns > .fld_before,
+.fld_layout_temp1 .fld_label,
+.fld_layout_temp1 .fld_com {
+  display: inline-block;
+  vertical-align: middle;
+}
+.fld_layout_temp1 .fld_btns > .fld_before,
 .fld_layout_temp1 .fld_label {
+  width: 25%;
   margin: 0 10px 0 0;
+  text-align: right;
+}
+.fld_layout_temp1 .fld_com {
+  width: 70%;
 }

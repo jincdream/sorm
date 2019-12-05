@@ -1,8 +1,19 @@
 .fld_layout_temp1{
-  display: flex;
-  align-items: center;
-
-  .fld_label{
+  .fld{
+    margin: 0 0 10px 0;
+  }
+  .fld_btns>.fld_before,
+  .fld_label,
+  .fld_com{
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .fld_btns>.fld_before,.fld_label{
+    width: 25%;
     margin: 0 10px 0 0;
+    text-align: right;
+  }
+  .fld_com{
+    width: 70%;
   }
 }

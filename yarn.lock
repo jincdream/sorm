@@ -758,20 +758,20 @@
     "@types/unist" "*"
     "@types/vfile-message" "*"
 
-"@uform/core@^1.0.0-alpha.4":
-  version "1.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@uform/core/-/core-1.0.0-alpha.4.tgz#44adb692a86803c462070e16c0c09c1e6579e4ec"
-  integrity sha512-SHKzjAvT59CQ20tBl8c8vz2s75yR1/mhZ9QgmFOkfzb9Tn4JdTh+LlTwK6L64cwnshPfVjn1/I8YJ/h2gptekQ==
+"@uform/core@^1.0.0-alpha.5":
+  version "1.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@uform/core/-/core-1.0.0-alpha.5.tgz#008d0816518ccb2148cfa03e5e4b8a573dfc1390"
+  integrity sha512-BYKWQM/YCGdURGl93V9G0wRuKa1KIvpG0Vkt4pcNSWmy1r5r8ojZ3LBCtM8C2i8n0QQzaAGuo+yPLVTeWha5AA==
   dependencies:
-    "@uform/shared" "^1.0.0-alpha.4"
+    "@uform/shared" "^1.0.0-alpha.5"
     "@uform/types" "^0.4.0"
-    "@uform/validator" "^1.0.0-alpha.4"
+    "@uform/validator" "^1.0.0-alpha.5"
     immer "^3.2.0"
 
-"@uform/shared@^1.0.0-alpha.4":
-  version "1.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@uform/shared/-/shared-1.0.0-alpha.4.tgz#171cbd3cc8a3ed2460497c579747c686ac88e8f6"
-  integrity sha512-CrDGbUGUkTBAvsFMRfENJMvMFDzLGmM7PX8l2ssDF3GVbwzi6TAeIXu5FY73fKtks0b5o6BYBPZDRmm9rbCcag==
+"@uform/shared@^1.0.0-alpha.5":
+  version "1.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@uform/shared/-/shared-1.0.0-alpha.5.tgz#a70e3af9fecbe248c32383037a4f97f0600f944d"
+  integrity sha512-HnSzGbJj1kwyD3gjeF8EenaFaxqqV2FpiFp2HxSQF0T0o0eygwVv7SJn4i9OtWXi3IHssHXNoTdSB7cdtjvRUg==
   dependencies:
     "@uform/types" "^0.4.0"
     camel-case "^3.0.0"
@@ -785,12 +785,12 @@
   dependencies:
     rxjs "^6.3.3"
 
-"@uform/validator@^1.0.0-alpha.4":
-  version "1.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@uform/validator/-/validator-1.0.0-alpha.4.tgz#2b54aee2aaaf83edbc02a557ec21cddfd1bc4896"
-  integrity sha512-W7rGi0dmf4OPMgSbcep7cZY7tI2pmXgC3poCkz6pVTknPTM8t05BuXsr6YK5hvsR8V06R1IEpiw/ZtqtsJg4zA==
+"@uform/validator@^1.0.0-alpha.5":
+  version "1.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@uform/validator/-/validator-1.0.0-alpha.5.tgz#261bf79eb182cc6964f266aed74c1ddd131104bc"
+  integrity sha512-bTMAJp28/Sh6KCNS9SA9glyiGfRPdqcPlSEoFs0FuGBGbhO1CkcKZKcT5KbklOQxfajqgkJ62ls6uRQJLZWgVA==
   dependencies:
-    "@uform/shared" "^1.0.0-alpha.4"
+    "@uform/shared" "^1.0.0-alpha.5"
     "@uform/types" "^0.4.0"
 
 accord@^0.29.0:
@@ -3475,6 +3475,11 @@ lodash.isarray@^3.0.0:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.isarray/-/lodash.isarray-3.0.4.tgz#79e4eb88c36a8122af86f844aa9bcd851b5fbb55"
   integrity sha1-eeTriMNqgSKvhvhEqpvNhRtfu1U=
+
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
 
 lodash.keys@^3.0.0:
   version "3.1.2"

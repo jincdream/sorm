@@ -3,7 +3,6 @@
     class="{{props.className}}"
     style="{{props.style}}"
     controlled="{{true}}"
-    data-schema="{{props}}"
     value="{{uiValue}}"
     onInput="onChange"
     onBlur="onBlur"
@@ -26,15 +25,91 @@
   />
 </template>
 
-<view class="fld_layout_temp1">
-  <!-- <text class="fld_label">
+<template name="textarea">
+  <textarea
+    class="{{props.className}}"
+    style="{{props.style}}"
+    value="{{uiValue}}"
+    controlled="{{true}}"
+    onInput="onChange"
+    onBlur="onBlur"
+    onFocus="onFocus"
+    onConfirm="onConfirm"
+    placeholder="{{props.placeholder}}"
+    placeholder-style="{{props['placeholder-style']}}"
+    placeholder-class="{{props['placeholder-class']}}"
+    auto-height="{{props['auto-height']}}"
+    disabled="{{props.disabled === true ? true : false}}"
+    maxlength="{{props.maxlength}}"
+    focus="{{props.focus}}"
+  />
+</template>
+
+<template name="radio">
+  <s-radio
+    onChange="onChange"
+    value="{{uiValue}}"
+    props="{{props}}"/>
+</template>
+
+<template name="checkbox">
+  <s-checkbox
+    onChange="onChange"
+    value="{{uiValue}}"
+    props="{{props}}"
+  />
+</template>
+
+<template name="switch">
+  <switch
+    class="{{props.className}}"
+    style="{{props.style}}"
+    onChange="onChange"
+    disabled="{{props.disabled}}"
+    checked="{{uiValue}}"
+    aria-label="{{props['aria-label']}}" />
+</template>
+
+<template name="slider">
+  <!-- padding: 滑块圆心在直线终点，所以需要额外的宽度 -->
+  <view style="{{`position:relative;overflow:hidden;padding:${(props['handle-size'] || 22 + 2) / 2}px`}}">
+    <slider
+      class="{{props.className}}"
+      style="{{props.style}}"
+      value="{{uiValue || props.min}}"
+      onChange="onChange"
+      onChanging="onChanging"
+      min="{{props.min}}"
+      step="{{props.step}}"
+      max="{{props.max}}"
+      disabled="{{props.disabled}}"
+      active-color="{{props['active-color']}}"
+      background-color="{{props['background-color']}}"
+      track-size="{{props['track-size']}}"
+      handle-size="{{props['handle-size']}}"
+      handle-color="{{props['handle-color']}}"
+      show-value="{{props['show-value']}}"/>
+  </view>
+</template>
+
+<template name="picker">
+  <s-picker
+    onChange="onChange"
+    value="{{uiValue}}"
+    props="{{props}}"/>
+</template>
+
+<view class="fld">
+
+  <text class="fld_label">
     {{label}}
   </text>
   <view class="fld_com">
+  
     <template is="{{component.name}}" data="{{
       props: component.props,
       onChange:onChange,
       uiValue: uiValue
     }}" />
-  </view> -->
+  </view>
 </view>

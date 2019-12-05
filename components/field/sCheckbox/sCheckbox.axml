@@ -1,0 +1,11 @@
+<checkbox-group
+  onChange="onChange">
+  <label class="sm_checkbox_wrap" a:for="{{dataSource}}" key="label-{{index}}">
+    <checkbox
+      value="{{index}}"
+      checked="{{item.isDefault}}"
+      disabled="{{item.disabled}}"
+      color="{{item.color}}" />
+    <text class="checkbox-text">{{item.label}}</text>
+  </label>
+</checkbox-group>

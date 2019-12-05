@@ -16,12 +16,12 @@ Page({
         "custom":{
           "type": "string",
           "title": "自定义",
-          "x-component": "customs",
+          "x-component": "custom",
           "x-component-props": {}
         },
         "name": {
           "type": "string",
-          "title": "姓名",
+          "title": "输入框",
           "default": "xxx",
           "description": "我是字段描述",
           "x-props" : {
@@ -32,6 +32,131 @@ Page({
           "x-component-props": {
             // "value": "{{root.fieldA === 'xxx' ? 0 : 1}}",
             // "disabled": "{{root.fieldA > root.fieldB}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
+          },
+          "x-rules": [{
+            "required": true
+          }]
+        },
+        "name1": {
+          "type": "string",
+          "title": "多行输入",
+          "default": "xxx",
+          "description": "我是字段描述",
+          "x-props" : {
+            
+          },
+          // 解析 x-component
+          "x-component": "textarea",
+          "x-component-props": {
+            // "value": "{{root.fieldA === 'xxx' ? 0 : 1}}",
+            // "disabled": "{{root.fieldA > root.fieldB}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
+          },
+          "x-rules": [{
+            "required": true
+          }]
+        },
+        "name22": {
+          "type": "string",
+          "title": "单选按钮",
+          "default": "xxx",
+          "description": "我是字段描述",
+          "x-props" : {
+            
+          },
+          "x-component": "radio",
+          "x-component-props": {
+            "value":"angular",
+            "dataSource": [
+              { "value": "angular", "label": "AngularJS", "color": "red" },
+              { "value": "react", "label": "React" },
+              { "value": "polymer", "label": "Polymer" },
+              { "value": "vue", "label": "Vue.js" },
+              { "value": "ember", "label": "Ember.js" },
+              { "value": "backbone", "label": "Backbone.js", "disabled": true },
+            ]
+          },
+          "x-rules": [{
+            "required": true
+          }]
+        },
+        "name3a23": {
+          "type": "string",
+          "title": "多项选择",
+          "default": "xxx",
+          "description": "我是字段描述",
+          "x-props" : {
+            
+          },
+          "x-component": "checkbox",
+          "x-component-props": {
+            "value":["react","vue"],
+            "dataSource": [
+               { "value": "angular", "label": "AngularJS", "color": "red" },
+              { "value": "react", "label": "React"},
+              { "value": "polymer", "label": "Polymer" },
+              { "value": "vue", "label": "Vue.js" },
+              { "value": "ember", "label": "Ember.js" },
+              { "value": "backbone", "label": "Backbone.js", "disabled": true },
+            ]
+          },
+          "x-rules": [{
+            "required": true
+          }]
+        },
+        "name123": {
+          "type": "string",
+          "title": "开关",
+          "default": "xxx",
+          "description": "我是字段描述",
+          "x-props" : {
+            
+          },
+          "x-component": "switch",
+          "x-component-props": {
+            "value": true
+          },
+          "x-rules": [{
+            "required": true
+          }]
+        },
+        "name1f023": {
+          "type": "string",
+          "title": "滑动选择",
+          "default": "xxx",
+          "description": "我是字段描述",
+          "x-props" : {
+            
+          },
+          "x-component": "slider",
+          "x-component-props": {
+            "min": 10,
+            "step": 10,
+            "max": 100,
+            "show-value": true
+          },
+          "x-rules": [{
+            "required": true
+          }]
+        },
+        "nxame1023": {
+          "type": "string",
+          "title": "下拉选择",
+          "default": "xxx",
+          "description": "我是字段描述",
+          "x-props" : {
+            
+          },
+          "x-component": "picker",
+          "x-component-props": {
+            "value":"react",
+            "dataSource":[
+              { "value": "angular", "label": "AngularJS", "color": "red" },
+              { "value": "react", "label": "React" },
+              { "value": "polymer", "label": "Polymer" },
+              { "value": "vue", "label": "Vue.js" },
+              { "value": "ember", "label": "Ember.js" },
+              { "value": "backbone", "label": "Backbone.js", "disabled": true },
+            ]
           },
           "x-rules": [{
             "required": true

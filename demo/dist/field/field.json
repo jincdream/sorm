@@ -1,3 +1,8 @@
 {
-  "component": true
+  "component": true,
+  "usingComponents": {
+    "s-radio": "./sRadio/sRadio",
+    "s-checkbox": "./sCheckbox/sCheckbox",
+    "s-picker": "./sPicker/sPicker"
+  }
 }

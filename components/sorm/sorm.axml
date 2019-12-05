@@ -1,18 +1,19 @@
 
 
-<view style="{{style}}" class="{{`sorm_layout ${className}`}}">
+<view style="{{style}}" class="{{`sorm_layout fld_layout_temp1 ${className}`}}">
   <view a:for="{{schema}}">
     <!-- native items -->
-     <!-- <field
-        label="{{item.label}}"
-        component="{{item.component}}"
-        layout="{{item.layout}}"
-        fieldEmmiter="{{item.fieldEmmiter}}"
-        fieldListener="{{item.fieldListener}}"
-        saveRef="{{item.saveRef}}"
-      /> -->
+    <field
+      a:if="{{item._supported}}"
+      label="{{item.label}}"
+      component="{{item.component}}"
+      layout="{{item.layout}}"
+      fieldEmmiter="{{item.fieldEmmiter}}"
+      fieldListener="{{item.fieldListener}}"
+      saveRef="{{item.saveRef}}"
+    />
     <!-- custom items -->
-    <view>
+    <view a:else>
       <slot
         name="items"
         label="{{item.label}}"
@@ -23,11 +24,18 @@
         saveRef="{{item.saveRef}}"
       />
     </view>
+
+    <view class="fld fld_btns" a:if="{{schema.length - 1 === index}}">
+      <view class="fld_before"/>
+      <view class="fld_com">
+        <view class="sm_btns">
+          <button class="sm_btn default" type="primary">提交</button>
+          <button class="sm_btn default" type="normal">重置</button>
+        </view>
+      </view>
+    </view>
     
   </view>
-
-  <view class="sm_btns">
-    <button class="sm_btn default" type="primary">提交</button>
-    <button class="sm_btn default" type="normal">重置</button>
-  </view>
+  
+  
 </view>

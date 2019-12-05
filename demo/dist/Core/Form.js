@@ -1,21 +1,39 @@
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+import { createForm } from '@uform/core';
+import isEqual from 'lodash.isequal';
+var Supported = {
+  input: true,
+  textarea: true,
+  radio: true,
+  radioGroup: true,
+  checkbox: true,
+  checkboxGroup: true,
+  "switch": true,
+  slider: true,
+  pickerView: true,
+  picker: true,
+  view: true,
+  "radio-group": true,
+  "checkbox-group": true,
+  "picker-view": true
+};
+
 var Sorm =
 /*#__PURE__*/
 function () {
   function Sorm() {
     this.fieldComponents = {};
-    this.initValue = {}; // this.core = createForm({
-    //   onChange: (values) => {
-    //   },
-    //   //表单提交事件回调
-    //   onSubmit: (values) => {
-    //   },
-    //   //表单重置事件回调
-    //   onReset: () => {
-    //   },
-    //   //表单校验失败事件回调
-    //   onValidateFailed:(validated) => {
-    //   }
-    // })
+    this.initValue = {};
+    this.core = createForm({
+      onChange: function onChange(values) {},
+      //表单提交事件回调
+      onSubmit: function onSubmit(values) {},
+      //表单重置事件回调
+      onReset: function onReset() {},
+      //表单校验失败事件回调
+      onValidateFailed: function onValidateFailed(validated) {}
+    });
   }
 
   var _proto = Sorm.prototype;
@@ -39,16 +57,19 @@ function () {
           fieldProps = componentSchemaDesc["x-props"],
           rules = componentSchemaDesc["x-rules"],
           childrenSchema = componentSchemaDesc.properties; // this.initValue[thisKey] = cprops.value
-      // this.core.registerField({
-      //   name: thisKey,
-      //   initialValue: cprops.value,
-      //   value: cprops.value,
-      //   rules: rules
-      // })
 
+      _this.core.registerField({
+        name: thisKey,
+        initialValue: cprops.value,
+        value: cprops.value,
+        rules: rules
+      });
+
+      cname = cname.toLocaleLowerCase();
       return {
+        _supported: Supported[cname],
         component: {
-          name: cname.toLocaleLowerCase(),
+          name: cname,
           props: cprops,
           expression: expression
         },
@@ -128,13 +149,128 @@ export function getFieldMixins() {
     methods: {
       onChange: function onChange(e) {
         console.log(e);
-        self.setData({
+        var self = this;
+        this.setData({
           uiValue: e.detail.value
         });
       },
       onBlur: function onBlur(e) {},
       onFocus: function onFocus(e) {},
-      onConfirm: function onConfirm(e) {}
+      onConfirm: function onConfirm(e) {},
+      onChanging: function onChanging(e) {}
+    }
+  }];
+}
+export function getFieldGroupMixin() {
+  return [{
+    didMount: function didMount() {
+      var props = this.props.props;
+      var _props$dataSource = props.dataSource,
+          dataSource = _props$dataSource === void 0 ? [] : _props$dataSource,
+          value = props.value;
+      var indexValue = 0;
+      var labelValue = dataSource[0].label;
+
+      var _dataSource = dataSource.map(function (v, index) {
+        var isDefault = false;
+
+        if (v.value === value) {
+          indexValue = index;
+          labelValue = v.label;
+          isDefault = true;
+        }
+
+        return _extends({}, v, {
+          id: index,
+          isDefault: isDefault
+        });
+      });
+
+      this.setData({
+        dataSource: _dataSource,
+        value: value,
+        indexValue: indexValue,
+        labelValue: labelValue
+      });
+    },
+    methods: {
+      onChange: function onChange(e) {
+        var indexValue = e.detail.value;
+        var valueObj = this.data.dataSource[indexValue];
+        var formValue = valueObj.value;
+        var labelValue = valueObj.label;
+        this.props.onChange && this.props.onChange({
+          detail: {
+            value: formValue
+          }
+        });
+        this.setData({
+          indexValue: indexValue,
+          value: formValue,
+          labelValue: labelValue
+        });
+      }
+    }
+  }];
+}
+export function getFieldGroupArrayMixin() {
+  // 多选值
+  return [{
+    didMount: function didMount() {
+      var props = this.props.props;
+      var _props$dataSource2 = props.dataSource,
+          dataSource = _props$dataSource2 === void 0 ? [] : _props$dataSource2,
+          value = props.value;
+      var indexValue = [];
+      var isArrayValue = Array.isArray(value);
+
+      if (!isArrayValue) {
+        console.error("[value init error]: 非数组值");
+      }
+
+      var _dataSource = dataSource.map(function (v, index) {
+        var isDefault = false;
+
+        if (isArrayValue) {
+          if (value.some(function (defaultValue) {
+            return isEqual(defaultValue, v.value);
+          })) {
+            isDefault = true;
+            indexValue.push(index);
+          }
+        }
+
+        return _extends({}, v, {
+          id: index,
+          isDefault: isDefault
+        });
+      });
+
+      this.setData({
+        dataSource: _dataSource,
+        indexValue: indexValue,
+        value: value
+      });
+    },
+    methods: {
+      onChange: function onChange(e) {
+        var _this2 = this;
+
+        var indexValue = e.detail.value;
+
+        if (!Array.isArray(indexValue)) {
+          return console.error("[value change error]: \u975E\u6570\u7EC4\u503C");
+        }
+
+        console.log(indexValue, "indexValue");
+        this.props.onChange && this.props.onChange({
+          detail: {
+            value: indexValue.map(function (v, index) {
+              return _this2.data.dataSource[index].value;
+            })
+          }
+        });
+      }
     }
   }];
 }

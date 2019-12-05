@@ -153,10 +153,29 @@ export interface IFieldProps{
   value: string,
   saveRef: (ref: any)=>{}
 }
-export interface IMixin<T>{
+export interface IMixin<T> extends IAPP{
   props?: T,
   data?: any,
-  setData?: (data: object)=>{},
   didMount?: ()=>{},
   methods?: object
+}
+export interface IAPP{
+  setData?: (data: object)=>{},
+  props?: any,
+  data?: any,
+  isArrayValue?: boolean
+}
+interface IDataSource {
+  value: string,
+  label: string,
+  id?: number,
+  isDefault?: boolean,
+  color?: string
+}
+export interface IFieldGroupProps<T>{
+  props: {
+    value?: T,
+    dataSource: Array<IDataSource>,
+  },
+  onChange: (e: any) => {}
 }

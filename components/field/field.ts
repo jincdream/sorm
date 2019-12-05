@@ -2,7 +2,7 @@ import {
   getFieldMixins
 } from '../Core/Form'
 Component({
-  // mixins: getFieldMixins(),
+  mixins: getFieldMixins(),
   data: {},
   props: {},
   didMount() {
