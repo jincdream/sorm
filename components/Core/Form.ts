@@ -12,7 +12,7 @@ import {
 } from './Share'
 
 import {createForm} from '@uform/core'
-import isEqual from 'lodash.isequal'
+// import isEqual from 'lodash.isequal'
 
 const Supported: ISupportedFormItem = {
   input: true,
@@ -75,12 +75,12 @@ class Sorm {
       } = componentSchemaDesc
       // this.initValue[thisKey] = cprops.value
       
-      this.core.registerField({
-        name: thisKey,
-        initialValue: cprops.value,
-        value: cprops.value,
-        rules: rules
-      })
+      // this.core.registerField({
+      //   name: thisKey,
+      //   initialValue: cprops.value,
+      //   value: cprops.value,
+      //   rules: rules
+      // })
       cname = cname.toLocaleLowerCase()
       return {
         _supported: Supported[cname],
@@ -239,10 +239,10 @@ export function getFieldGroupArrayMixin(){
       let _dataSource = dataSource.map((v,index)=>{
         let isDefault = false
         if(isArrayValue){
-          if(value.some( defaultValue => isEqual(defaultValue,v.value))){
-            isDefault = true
-            indexValue.push(index)
-          }
+          // if(value.some( defaultValue => isEqual(defaultValue,v.value))){
+          //   isDefault = true
+          //   indexValue.push(index)
+          // }
         }
         return {
           ...v,
