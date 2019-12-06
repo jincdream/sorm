@@ -1,7 +1,7 @@
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-import { createForm } from '@uform/core'; // import isEqual from 'lodash.isequal'
-
+import { createForm } from '@uform/core';
+import isEqual from 'lodash.isequal';
 var Supported = {
   input: true,
   textarea: true,
@@ -14,6 +14,7 @@ var Supported = {
   pickerView: true,
   picker: true,
   view: true,
+  "date-picker": true,
   "radio-group": true,
   "checkbox-group": true,
   "picker-view": true
@@ -57,12 +58,13 @@ function () {
           fieldProps = componentSchemaDesc["x-props"],
           rules = componentSchemaDesc["x-rules"],
           childrenSchema = componentSchemaDesc.properties; // this.initValue[thisKey] = cprops.value
-      // this.core.registerField({
-      //   name: thisKey,
-      //   initialValue: cprops.value,
-      //   value: cprops.value,
-      //   rules: rules
-      // })
+
+      _this.core.registerField({
+        name: thisKey,
+        initialValue: cprops.value,
+        value: cprops.value,
+        rules: rules
+      });
 
       cname = cname.toLocaleLowerCase();
       return {
@@ -168,7 +170,7 @@ export function getFieldGroupMixin() {
           dataSource = _props$dataSource === void 0 ? [] : _props$dataSource,
           value = props.value;
       var indexValue = 0;
-      var labelValue = dataSource[0].label;
+      var labelValue = (dataSource[0] || {}).label || "";
 
       var _dataSource = dataSource.map(function (v, index) {
         var isDefault = false;
@@ -230,10 +232,13 @@ export function getFieldGroupArrayMixin() {
       var _dataSource = dataSource.map(function (v, index) {
         var isDefault = false;
 
-        if (isArrayValue) {// if(value.some( defaultValue => isEqual(defaultValue,v.value))){
-          //   isDefault = true
-          //   indexValue.push(index)
-          // }
+        if (isArrayValue) {
+          if (value.some(function (defaultValue) {
+            return isEqual(defaultValue, v.value);
+          })) {
+            isDefault = true;
+            indexValue.push(index);
+          }
         }
 
         return _extends({}, v, {

@@ -1,7 +1,7 @@
 <template name="input">
   <input
     class="{{props.className}}"
-    style="{{props.style}}"
+    style="{{'line-height:1.4;padding:padding:5px;border:1px solid rgb(238, 238, 238);width:100%;box-sizing:border-box;'+props.style}}"
     controlled="{{true}}"
     value="{{uiValue}}"
     onInput="onChange"
@@ -28,7 +28,7 @@
 <template name="textarea">
   <textarea
     class="{{props.className}}"
-    style="{{props.style}}"
+    style="{{'border:1px solid rgb(238, 238, 238);' + props.style}}"
     value="{{uiValue}}"
     controlled="{{true}}"
     onInput="onChange"
@@ -97,6 +97,14 @@
     onChange="onChange"
     value="{{uiValue}}"
     props="{{props}}"/>
+</template>
+
+<template name="date-picker">
+  <date-picker
+    onChange="onChange"
+    value="{{uiValue}}"
+    props="{{props}}"
+  />
 </template>
 
 <view class="fld">

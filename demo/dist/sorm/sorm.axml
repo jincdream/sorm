@@ -29,8 +29,8 @@
       <view class="fld_before"/>
       <view class="fld_com">
         <view class="sm_btns">
-          <button class="sm_btn default" type="primary">提交</button>
           <button class="sm_btn default" type="normal">重置</button>
+          <button class="sm_btn default" type="primary">提交</button>
         </view>
       </view>
     </view>

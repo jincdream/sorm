@@ -12,7 +12,7 @@ import {
 } from './Share'
 
 import {createForm} from '@uform/core'
-// import isEqual from 'lodash.isequal'
+import isEqual from 'lodash.isequal'
 
 const Supported: ISupportedFormItem = {
   input: true,
@@ -26,6 +26,7 @@ const Supported: ISupportedFormItem = {
   pickerView: true,
   picker: true,
   view: true,
+  "date-picker": true,
   "radio-group": true,
   "checkbox-group": true,
   "picker-view": true
@@ -75,12 +76,12 @@ class Sorm {
       } = componentSchemaDesc
       // this.initValue[thisKey] = cprops.value
       
-      // this.core.registerField({
-      //   name: thisKey,
-      //   initialValue: cprops.value,
-      //   value: cprops.value,
-      //   rules: rules
-      // })
+      this.core.registerField({
+        name: thisKey,
+        initialValue: cprops.value,
+        value: cprops.value,
+        rules: rules
+      })
       cname = cname.toLocaleLowerCase()
       return {
         _supported: Supported[cname],
@@ -181,7 +182,7 @@ export function getFieldGroupMixin(){
       let {props} = this.props
       let {dataSource = [],value} = props
       let indexValue = 0
-      let labelValue = dataSource[0].label
+      let labelValue = (dataSource[0] || {}).label || ""
       
       let _dataSource = dataSource.map((v,index)=>{
         let isDefault = false
@@ -239,10 +240,10 @@ export function getFieldGroupArrayMixin(){
       let _dataSource = dataSource.map((v,index)=>{
         let isDefault = false
         if(isArrayValue){
-          // if(value.some( defaultValue => isEqual(defaultValue,v.value))){
-          //   isDefault = true
-          //   indexValue.push(index)
-          // }
+          if(value.some( defaultValue => isEqual(defaultValue,v.value))){
+            isDefault = true
+            indexValue.push(index)
+          }
         }
         return {
           ...v,

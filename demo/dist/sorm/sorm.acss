@@ -5,14 +5,16 @@
 .sorm_layout .sm_btns {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  padding-top: 20px;
 }
 .sorm_layout .sm_btns .sm_btn {
-  margin-right: 10px;
+  margin-left: 10px;
 }
 .sorm_layout .sm_btns .sm_btn.default {
   padding: 0 12px;
-  height: 36px;
-  line-height: 36px;
+  height: 30px;
+  line-height: 30px;
   font-size: 14px;
 }
 .sorm_layout .sm_btns .sm_btn.small {

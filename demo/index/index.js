@@ -138,6 +138,34 @@ Page({
             "required": true
           }]
         },
+        "date1": {
+          "type": "string",
+          "title": "日期选择",
+          "default": "xxx",
+          "description": "我是字段描述",
+          "x-props" : {
+            
+          },
+          "x-component": "date-picker",
+          "x-component-props": {
+            /**
+             *  yyyy-MM-dd 默认
+             *  HH:mm
+                yyyy-MM-dd HH:mm
+                yyyy-MM（最低基础库：1.1.1，可用 canIUse('datePicker.object.format.yyyy-MM') 判断）
+                yyyy（最低基础库：1.1.1，可用 canIUse('datePicker.object.format.yyyy') 判断）
+             */
+            "format": "yyyy-MM-dd",
+            // 格式跟 format 的一样
+            "currentDate": "2019-11-18",
+            "startDate": "2019-11-01",
+            "endDate": "2019-12-18",
+            "valueType": "timestamp" // format default
+          },
+          "x-rules": [{
+            "required": true
+          }]
+        },
         "nxame1023": {
           "type": "string",
           "title": "下拉选择",

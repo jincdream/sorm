@@ -23,6 +23,7 @@ export interface ISupportedFormItem {
   pickerView: boolean,
   picker: boolean,
   view: boolean,
+  "date-picker": boolean,
   "radio-group": boolean,
   "checkbox-group": boolean,
   "picker-view": boolean

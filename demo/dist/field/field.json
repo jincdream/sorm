@@ -3,6 +3,7 @@
   "usingComponents": {
     "s-radio": "./sRadio/sRadio",
     "s-checkbox": "./sCheckbox/sCheckbox",
-    "s-picker": "./sPicker/sPicker"
+    "s-picker": "./sPicker/sPicker",
+    "date-picker": "./datePicker/datePicker"
   }
 }
