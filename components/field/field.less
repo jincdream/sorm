@@ -1,3 +1,8 @@
+.fld_label>.fld_lb_text{
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1em;
+}
 .fld_layout_temp1{
   .fld{
     margin: 0 0 10px 0;
@@ -8,10 +13,19 @@
     display: inline-block;
     vertical-align: middle;
   }
-  .fld_btns>.fld_before,.fld_label{
+  .fld_btns>.fld_before,
+  .fld_label{
     width: 25%;
     margin: 0 10px 0 0;
     text-align: right;
+  }
+  .fld_error{
+    padding-left: 25%;
+    margin: 0 0 0 10px;
+    .fld_err_text{
+      color:#F23C3C;
+      font-size: 12px;
+    }
   }
   .fld_com{
     width: 70%;

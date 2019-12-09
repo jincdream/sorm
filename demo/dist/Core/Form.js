@@ -2,6 +2,13 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 import { createForm } from '@uform/core';
 import isEqual from 'lodash.isequal';
+var CustomEventName;
+
+(function (CustomEventName) {
+  CustomEventName["ValidatedError"] = "validatedError";
+  CustomEventName["SromRest"] = "sormReset";
+})(CustomEventName || (CustomEventName = {}));
+
 var Supported = {
   input: true,
   textarea: true,
@@ -25,7 +32,6 @@ var Sorm =
 function () {
   function Sorm() {
     this.fieldComponents = {};
-    this.initValue = {};
     this.core = createForm({
       onChange: function onChange(values) {},
       //表单提交事件回调
@@ -45,6 +51,7 @@ function () {
     var _schema$properties = schema.properties,
         properties = _schema$properties === void 0 ? {} : _schema$properties;
     var keys = Object.keys(properties);
+    var core = this.core;
     return keys.map(function (keyName, index) {
       var componentSchemaDesc = properties[keyName];
       var thisKey = parentKey ? parentKey + '.' + keyName : keyName;
@@ -57,15 +64,18 @@ function () {
           expression = componentSchemaDesc["x-component-props-expression"],
           fieldProps = componentSchemaDesc["x-props"],
           rules = componentSchemaDesc["x-rules"],
-          childrenSchema = componentSchemaDesc.properties; // this.initValue[thisKey] = cprops.value
-
-      _this.core.registerField({
+          childrenSchema = componentSchemaDesc.properties;
+      var required = false;
+      console.log(cprops.value, "cprops.value");
+      var field = core.registerField({
         name: thisKey,
         initialValue: cprops.value,
         value: cprops.value,
         rules: rules
       });
-
+      field.getState(function (state) {
+        required = state.required;
+      });
       cname = cname.toLocaleLowerCase();
       return {
         _supported: Supported[cname],
@@ -74,6 +84,7 @@ function () {
           props: cprops,
           expression: expression
         },
+        required: required,
         hooks: [],
         listening: [],
         keyName: thisKey,
@@ -81,11 +92,9 @@ function () {
         formType: formType,
         fieldProps: fieldProps,
         childrends: _this.schemaParser(componentSchemaDesc, parentKey),
-        saveRef: function saveRef(ref) {
-          _this.fieldComponents[cname] = ref;
-        },
-        fieldEmmiter: function fieldEmmiter() {},
-        fieldListener: function fieldListener() {}
+        getFormCore: function getFormCore() {
+          return core;
+        }
       };
     });
   }
@@ -112,48 +121,187 @@ function () {
 
 export function getFormMixins() {
   var sorm = new Sorm();
-  var self;
   return [{
     didMount: function didMount() {
-      self = this;
       var _this$props = this.props,
           schema = _this$props.schema,
           style = _this$props.style,
           className = _this$props["class"];
       var formCore = sorm.getCore();
       var components = sorm.parse(schema);
-      console.log(components);
       this.setData({
         schema: components,
         style: style,
         className: className
       });
     },
-    methods: {}
+    methods: {
+      reset: function reset() {
+        var onReset = this.props.onReset;
+        var core = sorm.getCore();
+        console.log(core.getFormState(function (state) {
+          // console.log(state,state.initialValues)
+          core.notify(CustomEventName.SromRest, state.initialValues);
+          onReset && onReset(state.initialValues);
+        }));
+      },
+      submit: function submit(e) {
+        var core = sorm.getCore();
+        var _this$props2 = this.props,
+            onSubmit = _this$props2.onSubmit,
+            onError = _this$props2.onError;
+        core.submit(function (res) {
+          onSubmit && onSubmit(res);
+        })["catch"](function (err) {
+          core.notify(CustomEventName.ValidatedError, err);
+          onError && onError(err);
+        });
+      }
+    }
   }];
 }
+
+var selfValidate = function selfValidate(validate) {
+  var res, _res$errors, errors, errData, isError;
+
+  return regeneratorRuntime.async(function selfValidate$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return regeneratorRuntime.awrap(validate());
+
+        case 2:
+          res = _context.sent;
+          _res$errors = res.errors, errors = _res$errors === void 0 ? [] : _res$errors;
+          errData = errors[0] || {
+            messages: []
+          };
+          isError = res.errors.length > 0;
+          return _context.abrupt("return", {
+            isError: isError,
+            errors: errData.messages
+          });
+
+        case 7:
+        case "end":
+          return _context.stop();
+      }
+    }
+  });
+};
+
 export function getFieldMixins() {
   var self;
   return [{
     didMount: function didMount() {
-      var _this$props2 = this.props,
-          fieldEmmiter = _this$props2.fieldEmmiter,
-          fieldListener = _this$props2.fieldListener,
-          component = _this$props2.component,
-          saveRef = _this$props2.saveRef;
-      saveRef(this);
-      self = this;
-      self.setData({
-        uiValue: component.props.value
+      var _this2 = this;
+
+      var _this$props3 = this.props,
+          component = _this$props3.component,
+          getFormCore = _this$props3.getFormCore,
+          keyName = _this$props3.keyName;
+      var core = getFormCore();
+      core.subscribe(function _callee(_ref) {
+        var type, payload, _filter, _filter$, _filter$$path, path, _filter$$messages, messages, uiValue;
+
+        return regeneratorRuntime.async(function _callee$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                type = _ref.type, payload = _ref.payload;
+                _context2.t0 = type;
+                _context2.next = _context2.t0 === CustomEventName.ValidatedError ? 4 : _context2.t0 === CustomEventName.SromRest ? 9 : 12;
+                break;
+
+              case 4:
+                _filter = (payload || []).filter(function (v) {
+                  return v.path === keyName;
+                }), _filter$ = _filter[0];
+                _filter$ = _filter$ === void 0 ? {} : _filter$;
+                _filter$$path = _filter$.path, path = _filter$$path === void 0 ? "" : _filter$$path, _filter$$messages = _filter$.messages, messages = _filter$$messages === void 0 ? [] : _filter$$messages;
+
+                if (path) {
+                  _this2.setData({
+                    isError: true,
+                    errors: messages
+                  });
+                }
+
+                return _context2.abrupt("break", 13);
+
+              case 9:
+                uiValue = (payload || {})[keyName] || "";
+
+                _this2.setData({
+                  isError: false,
+                  errors: [],
+                  uiValue: uiValue,
+                  fieldKey: keyName + Date.now()
+                });
+
+                return _context2.abrupt("break", 13);
+
+              case 12:
+                return _context2.abrupt("break", 13);
+
+              case 13:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        });
+      });
+      this.setData({
+        uiValue: component.props.value,
+        fieldKey: keyName + Date.now()
       });
     },
     methods: {
       onChange: function onChange(e) {
-        console.log(e);
-        var self = this;
-        this.setData({
-          uiValue: e.detail.value
-        });
+        var _this$props4, getFormCore, keyName, validate, value, core, res;
+
+        return regeneratorRuntime.async(function onChange$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _this$props4 = this.props, getFormCore = _this$props4.getFormCore, keyName = _this$props4.keyName, validate = _this$props4.validate;
+                value = e.value || e.detail.value;
+                core = getFormCore(); // setFieldValue(value)
+
+                core.setFieldValue(keyName, value);
+                _context4.next = 6;
+                return regeneratorRuntime.awrap(selfValidate(function _callee2() {
+                  return regeneratorRuntime.async(function _callee2$(_context3) {
+                    while (1) {
+                      switch (_context3.prev = _context3.next) {
+                        case 0:
+                          _context3.next = 2;
+                          return regeneratorRuntime.awrap(core.validate(keyName));
+
+                        case 2:
+                          return _context3.abrupt("return", _context3.sent);
+
+                        case 3:
+                        case "end":
+                          return _context3.stop();
+                      }
+                    }
+                  });
+                }));
+
+              case 6:
+                res = _context4.sent;
+                this.setData(_extends({
+                  uiValue: value
+                }, res));
+
+              case 8:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, null, this);
       },
       onBlur: function onBlur(e) {},
       onFocus: function onFocus(e) {},
@@ -201,9 +349,7 @@ export function getFieldGroupMixin() {
         var formValue = valueObj.value;
         var labelValue = valueObj.label;
         this.props.onChange && this.props.onChange({
-          detail: {
-            value: formValue
-          }
+          value: formValue
         });
         this.setData({
           indexValue: indexValue,
@@ -255,7 +401,7 @@ export function getFieldGroupArrayMixin() {
     },
     methods: {
       onChange: function onChange(e) {
-        var _this2 = this;
+        var _this3 = this;
 
         var indexValue = e.detail.value;
 
@@ -263,13 +409,10 @@ export function getFieldGroupArrayMixin() {
           return console.error("[value change error]: \u975E\u6570\u7EC4\u503C");
         }
 
-        console.log(indexValue, "indexValue");
         this.props.onChange && this.props.onChange({
-          detail: {
-            value: indexValue.map(function (v, index) {
-              return _this2.data.dataSource[index].value;
-            })
-          }
+          value: indexValue.map(function (v, index) {
+            return _this3.data.dataSource[index].value;
+          })
         });
       }
     }

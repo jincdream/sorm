@@ -1,7 +1,11 @@
 <template name="input">
   <input
     class="{{props.className}}"
-    style="{{'line-height:1.4;padding:padding:5px;border:1px solid rgb(238, 238, 238);width:100%;box-sizing:border-box;'+props.style}}"
+    style="{{
+      isError ? 'border: 1px solid #F23C3C' : '' +
+      'line-height:1.4;padding:padding:5px;border:1px solid rgb(238, 238, 238);width:100%;box-sizing:border-box;'
+      +props.style
+    }}"
     controlled="{{true}}"
     value="{{uiValue}}"
     onInput="onChange"
@@ -28,7 +32,10 @@
 <template name="textarea">
   <textarea
     class="{{props.className}}"
-    style="{{'border:1px solid rgb(238, 238, 238);' + props.style}}"
+    style="{{
+      isError ? 'border: 1px solid #F23C3C' : '' +
+      'border:1px solid rgb(238, 238, 238);' + props.style
+    }}"
     value="{{uiValue}}"
     controlled="{{true}}"
     onInput="onChange"
@@ -76,7 +83,7 @@
     <slider
       class="{{props.className}}"
       style="{{props.style}}"
-      value="{{uiValue || props.min}}"
+      value="{{uiValue || 0}}"
       onChange="onChange"
       onChanging="onChanging"
       min="{{props.min}}"
@@ -95,7 +102,7 @@
 <template name="picker">
   <s-picker
     onChange="onChange"
-    value="{{uiValue}}"
+    value="{{uiValue || []}}"
     props="{{props}}"/>
 </template>
 
@@ -108,16 +115,19 @@
 </template>
 
 <view class="fld">
-
-  <text class="fld_label">
-    {{label}}
-  </text>
+  <view class="fld_label">
+    <text class="fld_lb_text" a:if="{{required}}" style="color:red">*</text>
+    <text class="fld_lb_text">{{label}}</text>
+  </view>
   <view class="fld_com">
-  
-    <template is="{{component.name}}" data="{{
+    <template key="{{fieldKey}}" is="{{component.name}}" data="{{
       props: component.props,
+      isError: isError,
       onChange:onChange,
       uiValue: uiValue
     }}" />
+  </view>
+  <view class="fld_error">
+    <text class="fld_err_text" a:for="{{errors}}">{{item}}</text>
   </view>
 </view>

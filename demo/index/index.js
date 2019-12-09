@@ -14,7 +14,7 @@ Page({
         //   "title": "字段B"
         // },
         "custom":{
-          "type": "string",
+          "type": "object",
           "title": "自定义",
           "x-component": "custom",
           "x-component-props": {}
@@ -148,6 +148,7 @@ Page({
           },
           "x-component": "date-picker",
           "x-component-props": {
+            "value": "1575613980000",
             /**
              *  yyyy-MM-dd 默认
              *  HH:mm
@@ -155,11 +156,11 @@ Page({
                 yyyy-MM（最低基础库：1.1.1，可用 canIUse('datePicker.object.format.yyyy-MM') 判断）
                 yyyy（最低基础库：1.1.1，可用 canIUse('datePicker.object.format.yyyy') 判断）
              */
-            "format": "yyyy-MM-dd",
+            "format": "yyyy-MM-dd HH:mm",
             // 格式跟 format 的一样
-            "currentDate": "2019-11-18",
-            "startDate": "2019-11-01",
-            "endDate": "2019-12-18",
+            // "currentDate": "2019-11-18",
+            // "startDate": "2019-11-01",
+            // "endDate": "2019-12-18",
             "valueType": "timestamp" // format default
           },
           "x-rules": [{

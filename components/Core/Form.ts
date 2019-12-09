@@ -8,11 +8,17 @@ import {
   ISchemaPareserResult,
   ISupportedFormItem,
   IAPP,
-  IFieldGroupProps
+  IFieldGroupProps,
+  IValidate
 } from './Share'
 
 import {createForm} from '@uform/core'
 import isEqual from 'lodash.isequal'
+
+enum CustomEventName {
+  ValidatedError = "validatedError",
+  SromRest = 'sormReset'
+}
 
 const Supported: ISupportedFormItem = {
   input: true,
@@ -34,7 +40,6 @@ const Supported: ISupportedFormItem = {
 class Sorm {
   constructor(){
     this.fieldComponents = {}
-    this.initValue = {}
     this.core = createForm({
       onChange: (values) => {
 
@@ -60,7 +65,7 @@ class Sorm {
   private schemaParser(schema:ISchema,parentKey?: string): Array<ISormComponents> {
     let {properties = {}} = schema
     let keys:Array<string> = Object.keys(properties)
-    
+    let {core} = this
     return  keys.map((keyName,index)=>{
       let componentSchemaDesc = properties[keyName]
       let thisKey = parentKey ? parentKey + '.' + keyName : keyName
@@ -74,14 +79,19 @@ class Sorm {
         "x-rules": rules,
         properties: childrenSchema
       } = componentSchemaDesc
-      // this.initValue[thisKey] = cprops.value
-      
-      this.core.registerField({
+
+      let required = false
+      console.log(cprops.value,"cprops.value")
+      let field = core.registerField({
         name: thisKey,
         initialValue: cprops.value,
         value: cprops.value,
         rules: rules
       })
+      field.getState((state)=>{
+        required = state.required
+      })
+
       cname = cname.toLocaleLowerCase()
       return {
         _supported: Supported[cname],
@@ -90,6 +100,7 @@ class Sorm {
           props: cprops,
           expression
         },
+        required,
         hooks: [],
         listening: [],
         keyName: thisKey,
@@ -97,11 +108,9 @@ class Sorm {
         formType,
         fieldProps,
         childrends: this.schemaParser(componentSchemaDesc,parentKey),
-        saveRef: (ref)=>{
-          this.fieldComponents[cname] = ref
+        getFormCore:()=>{
+          return core
         },
-        fieldEmmiter: ()=>{},
-        fieldListener: ()=>{}
       }
     })
   }
@@ -119,12 +128,12 @@ class Sorm {
     return this.schemaParser(schema)
   }
 }
+
+
 export function getFormMixins(){
   let sorm = new Sorm()
-  let self
   return [{
     didMount(){
-      self = this
       let {
         schema,
         style,
@@ -132,7 +141,6 @@ export function getFormMixins(){
       } = this.props
       let formCore = sorm.getCore()
       let components = sorm.parse(schema)
-      console.log(components)
       this.setData({
         schema: components,
         style,
@@ -141,32 +149,102 @@ export function getFormMixins(){
       
     },
     methods: {
-      
-    }
+      reset(){
+        let { onReset } = this.props
+        let core = sorm.getCore()
+        console.log(core.getFormState(state => {
+          // console.log(state,state.initialValues)
+          core.notify(CustomEventName.SromRest,state.initialValues)
+          onReset && onReset(state.initialValues)
+        }))
+      },
+      submit(e){
+        let core = sorm.getCore()
+        let { onSubmit, onError } = this.props
+       
+        core.submit((res)=>{
+          onSubmit && onSubmit(res)
+        }).catch(err=>{
+          core.notify(CustomEventName.ValidatedError,err)
+          onError && onError(err)
+        })
+      }
+    } as IAPP
   } as IMixin<IFormProps>]
 }
+
+const selfValidate = async function(validate:IValidate){
+  let res = await validate()
+  let { errors = [] } = res
+  let errData = errors[0] || {messages:[]}
+  let isError = res.errors.length > 0
+  return {
+    isError,
+    errors: errData.messages
+  }
+}
+
 export function getFieldMixins(){
   let self
   return [{
     didMount(){
       let {
-        fieldEmmiter,
-        fieldListener,
         component,
-        saveRef
+        getFormCore,
+        keyName
       } = this.props
-      saveRef(this)
-      self = this
-      self.setData({
-        uiValue: component.props.value
+
+      let core = getFormCore()
+      core.subscribe(async ({
+        type,
+        payload
+      })=>{
+        switch(type){
+          case CustomEventName.ValidatedError:
+            let [{path = "",messages = []} = {}] = (payload || []).filter(v => v.path === keyName)
+            if(path){
+              this.setData({
+                isError: true,
+                errors: messages
+              })
+            }
+            break;
+          case CustomEventName.SromRest:
+            let uiValue = (payload || {})[keyName] || ""
+            this.setData({
+              isError: false,
+              errors: [],
+              uiValue,
+              fieldKey: keyName + Date.now()
+            })
+            break;
+          default:
+            break;
+        }
+      })
+
+      this.setData({
+        uiValue: component.props.value,
+        fieldKey: keyName + Date.now()
       })
     },
     methods: {
-      onChange(e){
-        console.log(e)
-        let self = this
+      async onChange(e){
+        let {
+          getFormCore,
+          keyName,
+          validate,
+        } = this.props
+        let value = e.value || e.detail.value
+        let core = getFormCore()
+        // setFieldValue(value)
+        core.setFieldValue(keyName,value)
+        let res = await selfValidate(async ()=>{
+          return await core.validate(keyName)
+        })
         this.setData({
-          uiValue: e.detail.value
+          uiValue: value,
+          ...res
         })
       },
       onBlur(e){},
@@ -212,9 +290,7 @@ export function getFieldGroupMixin(){
         let formValue = valueObj.value
         let labelValue = valueObj.label
         this.props.onChange && this.props.onChange({
-          detail:{
-            value: formValue
-          }
+          value: formValue
         })
         this.setData({
           indexValue,
@@ -264,11 +340,8 @@ export function getFieldGroupArrayMixin(){
         if(!Array.isArray(indexValue)){
           return console.error(`[value change error]: 非数组值`)
         }
-        console.log(indexValue,"indexValue")
         this.props.onChange && this.props.onChange({
-          detail:{
-            value: indexValue.map((v,index) => this.data.dataSource[index].value) 
-          }
+          value: indexValue.map((v,index) => this.data.dataSource[index].value) 
         })
       }
     } as IAPP

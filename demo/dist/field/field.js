@@ -3,8 +3,7 @@ Component({
   mixins: getFieldMixins(),
   data: {},
   props: {},
-  didMount: function didMount() {
-    console.log(this.props);
+  didMount: function didMount() {// console.log(this.props)
   },
   didUpdate: function didUpdate() {},
   didUnmount: function didUnmount() {},

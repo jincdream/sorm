@@ -6,9 +6,10 @@ Component({
   data: {},
   props: {},
   didMount() {
-    console.log(this.props)
+    // console.log(this.props)
   },
-  didUpdate() {},
+  didUpdate() {
+  },
   didUnmount() {},
   methods: {},
 });

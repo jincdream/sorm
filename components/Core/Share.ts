@@ -94,7 +94,9 @@ export interface IFormItem{
   props: any,
   expression?: object
 }
-
+export interface IValidate {
+  (): Promise<{ errors: Array<{path:string,messages:Array<string>}> }>
+}
 export interface ISormComponents{
   component: IFormItem,
   /**
@@ -113,9 +115,17 @@ export interface ISormComponents{
    * 属性
    */
   fieldProps: object,
-  hooks: [],
-  listening: [],
+  required: boolean,
+  getFormCore: IGetCore,
+  // setFieldValue: IEmmiter,
+  // listener: IListener,
+  // validate: IValidate,
+  // hooks: [],
+  // listening: [],
   childrends: Array<ISormComponents>
+}
+interface IGetCore{
+  (): any
 }
 interface IFormCore {
 
@@ -126,13 +136,13 @@ interface IFieldCore {
   validate: ()=>{}
 }
 interface IEventHandle {
-  ( data: any, fieldCore: IFieldCore, formCore: IFormCore ): never
+  ({ type, payload }: { type: string; payload: any }): void
 }
-interface IEmmiter{
-  (filedName: string, data: any): never
+export interface IEmmiter{
+  (data: any): void
 }
-interface IListener{
-  (filedName: string, callback: IEventHandle)
+export interface IListener{
+  (callback: IEventHandle): void
 }
 export interface ISchemaPareserResult{
   values: any,
@@ -147,21 +157,24 @@ export interface IFieldProps{
   style: string,
   class: string,
   layout: object,
+  required: boolean,
   component: IFormItem,
-  fieldEmmiter: IEmmiter,
-  fieldListener: IListener,
-  name: string,
+  getFormCore: IGetCore,
+  keyName: string,
   value: string,
+  validate: IValidate,
+  
   saveRef: (ref: any)=>{}
 }
 export interface IMixin<T> extends IAPP{
   props?: T,
   data?: any,
   didMount?: ()=>{},
-  methods?: object
+  methods?: object,
+  // selfValidate?: Promise<{isError: boolean, errors: Array<string>}>,
 }
 export interface IAPP{
-  setData?: (data: object)=>{},
+  setData?: (data: object,callback?:()=>void)=>{},
   props?: any,
   data?: any,
   isArrayValue?: boolean
