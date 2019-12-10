@@ -1,1 +1,7 @@
-<my-component />
+<template name="custom">
+  <!-- <view>123</view> -->
+</template>
+
+<sorm schema="{{schema}}" style="padding:10px">
+  <!-- <template slot="items" slot-scope="props" is="{{props.component.name}}" /> -->
+</sorm>

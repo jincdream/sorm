@@ -1,0 +1,139 @@
+<template name="input">
+  <input
+    class="{{props.className}}"
+    style="{{
+      (isError ? 'border: 1px solid #F23C3C;' : 'border:1px solid rgb(238, 238, 238);') +
+      'padding:5px;' +
+      props.style
+    }}"
+    controlled="{{true}}"
+    value="{{uiValue}}"
+    onInput="onChange"
+    onBlur="onBlur"
+    onFocus="onFocus"
+    onConfirm="onConfirm"
+    type="{{props.type}}"
+    password="{{props.password}}"
+    placeholder="{{props.placeholder}}"
+    placeholder-style="{{props['placeholder-style']}}"
+    placeholder-class="{{props['placeholder-class']}}"
+    disabled="{{props.disabled === true ? true : false}}"
+    maxlength="{{props.maxlength}}"
+    focus="{{props.focus}}"
+    confirm-type="{{props['confirm-type']}}"
+    confirm-hold="{{props['confirm-hold']}}"
+    cursor="{{props.cursor}}"
+    selection-start="{{props['selection-start']}}"
+    selection-end="{{props['selection-end']}}"
+    randomNumber="{{props.randomNumber}}"
+  />
+</template>
+
+<template name="textarea">
+  <textarea
+    class="{{props.className}}"
+    style="{{
+      (isError ? 'border: 1px solid #F23C3C;' : 'border:1px solid rgb(238, 238, 238);') +
+      props.style
+    }}"
+    value="{{uiValue}}"
+    controlled="{{true}}"
+    onInput="onChange"
+    onBlur="onBlur"
+    onFocus="onFocus"
+    onConfirm="onConfirm"
+    placeholder="{{props.placeholder}}"
+    placeholder-style="{{props['placeholder-style']}}"
+    placeholder-class="{{props['placeholder-class']}}"
+    auto-height="{{props['auto-height']}}"
+    disabled="{{props.disabled === true ? true : false}}"
+    maxlength="{{props.maxlength}}"
+    focus="{{props.focus}}"
+  />
+</template>
+
+<template name="radio">
+  <s-radio
+    key="{{fieldKey}}"
+    onChange="onChange"
+    value="{{uiValue}}"
+    props="{{props}}"/>
+</template>
+
+<template name="checkbox">
+  <s-checkbox
+    key="{{fieldKey}}"
+    onChange="onChange"
+    value="{{uiValue}}"
+    props="{{props}}"
+  />
+</template>
+
+<template name="switch">
+  <switch
+    class="{{props.className}}"
+    style="{{props.style}}"
+    onChange="onChange"
+    disabled="{{props.disabled}}"
+    checked="{{uiValue}}"
+    aria-label="{{props['aria-label']}}" />
+</template>
+
+<template name="slider">
+  <!-- padding: 滑块圆心在直线终点，所以需要额外的宽度 -->
+  <view style="{{`position:relative;overflow:hidden;padding:${(props['handle-size'] || 22 + 2) / 2}px`}}">
+    <slider
+      key="{{fieldKey}}"
+      class="{{props.className}}"
+      style="{{props.style}}"
+      value="{{uiValue || 0}}"
+      onChange="onChange"
+      onChanging="onChanging"
+      min="{{props.min}}"
+      step="{{props.step}}"
+      max="{{props.max}}"
+      disabled="{{props.disabled}}"
+      active-color="{{props['active-color']}}"
+      background-color="{{props['background-color']}}"
+      track-size="{{props['track-size']}}"
+      handle-size="{{props['handle-size']}}"
+      handle-color="{{props['handle-color']}}"
+      show-value="{{props['show-value']}}"/>
+  </view>
+</template>
+
+<template name="picker">
+  <s-picker
+    key="{{fieldKey}}"
+    onChange="onChange"
+    value="{{uiValue || []}}"
+    props="{{props}}"/>
+</template>
+
+<template name="date-picker">
+  <date-picker
+    key="{{fieldKey}}"
+    onChange="onChange"
+    value="{{uiValue}}"
+    props="{{props}}"
+  />
+</template>
+
+<view class="fld">
+  <view class="fld_label">
+    <text class="fld_lb_text" a:if="{{required}}" style="color:red">*</text>
+    <text class="fld_lb_text">{{label}}</text>
+  </view>
+  <view class="fld_com">
+    <template is="{{component.name}}" data="{{
+      props: component.props,
+      isError: isError,
+      onChange:onChange,
+      uiValue: uiValue,
+      fieldKey: fieldKey
+    }}" />
+  </view>
+  <view class="fld_error">
+    <text class="fld_err_text" a:for="{{errors}}">{{item}}</text>
+  </view>
+</view>

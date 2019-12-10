@@ -1,0 +1,41 @@
+<view style="{{style}}" class="{{`sorm_layout fld_layout_temp1 ${className}`}}">
+  <view a:for="{{schema}}">
+    <!-- native items -->
+    <field
+      a:if="{{item._supported}}"
+      keyName="{{item.keyName}}"
+      label="{{item.label}}"
+      component="{{item.component}}"
+      layout="{{item.layout}}"
+      getFormCore="{{item.getFormCore}}"
+      saveRef="{{item.saveRef}}"
+      required="{{item.required}}"
+    />
+    <!-- custom items -->
+    <view a:else>
+      <slot
+        name="items"
+        keyName="{{item.keyName}}"
+        label="{{item.label}}"
+        component="{{item.component}}"
+        layout="{{item.layout}}"
+        getFormCore="{{item.getFormCore}}"
+        saveRef="{{item.saveRef}}"
+        required="{{item.required}}"
+      />
+    </view>
+
+    <view class="fld fld_btns" a:if="{{schema.length - 1 === index}}">
+      <view class="fld_before"/>
+      <view class="fld_com">
+        <view class="sm_btns">
+          <button onTap="reset" class="sm_btn default" type="normal">重置</button>
+          <button onTap="submit" class="sm_btn default" type="primary">提交</button>
+        </view>
+      </view>
+    </view>
+    
+  </view>
+  
+  
+</view>

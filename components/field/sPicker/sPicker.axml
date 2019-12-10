@@ -1,0 +1,14 @@
+ <picker
+  onChange="onChange"
+  value="{{indexValue}}"
+  range="{{dataSource}}"
+  range-key="label">
+  <view class="row">
+    <view class="sm_picker_lv">
+      <!-- <text class="sm_vl_desc" a:if="{{labelValue}}">{{props.valueDesc || '当前选择：'}}</text> -->
+      <text class="sm_vl_desc">{{labelValue ? '当前选择：' : '请选择'}}</text>
+      <text style="flex:1">{{labelValue}}</text>
+      <!-- <text class="sm_vl_desc">更多选项</text> -->
+    </view>
+  </view>
+</picker>
