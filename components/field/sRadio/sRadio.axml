@@ -1,5 +1,5 @@
 <radio-group 
-  class="{{props.className}}"
+  class="{{props.className + ' sm_radid_group'}}"
   style="{{props.style}}"
   onChange="onChange">
   <label class="sm_radio_wrap" a:for="{{dataSource}}" key="label-{{index}}">

@@ -2,6 +2,8 @@
   <!-- <view>123</view> -->
 </template>
 
-<sorm schema="{{schema}}" style="padding:10px">
-  <!-- <template slot="items" slot-scope="props" is="{{props.component.name}}" /> -->
-</sorm>
+<view style="background:#fff">
+  <sorm schema="{{schema}}" onSubmit="submit">
+    <!-- <template slot="items" slot-scope="props" is="{{props.component.name}}" /> -->
+  </sorm>
+</view>

@@ -34,7 +34,7 @@ Page({
             // "disabled": "{{root.fieldA > root.fieldB}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
           },
           "x-rules": [{
-            "required": true
+            // "required": true
           }]
         },
         "name1": {
@@ -229,4 +229,11 @@ Page({
       path: 'pages/index/index',
     };
   },
+  submit(res){
+    console.log(res)
+
+    my.alert({
+      title: "提交成功"
+    })
+  }
 });

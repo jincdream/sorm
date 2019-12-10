@@ -1,4 +1,5 @@
 <checkbox-group
+  class="sm_checkbox_group"
   onChange="onChange">
   <label class="sm_checkbox_wrap" a:for="{{dataSource}}" key="label-{{index}}">
     <checkbox
