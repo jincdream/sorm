@@ -81,7 +81,7 @@ class Sorm {
       } = componentSchemaDesc
 
       let required = false
-      console.log(cprops.value,"cprops.value")
+
       let field = core.registerField({
         name: thisKey,
         initialValue: cprops.value,
@@ -152,11 +152,12 @@ export function getFormMixins(){
       reset(){
         let { onReset } = this.props
         let core = sorm.getCore()
-        console.log(core.getFormState(state => {
-          // console.log(state,state.initialValues)
-          core.notify(CustomEventName.SromRest,state.initialValues)
-          onReset && onReset(state.initialValues)
-        }))
+        core.reset().then(()=>{
+          core.getFormState(state => {
+            core.notify(CustomEventName.SromRest,state.initialValues)
+            onReset && onReset(state.initialValues)
+          })
+        })
       },
       submit(e){
         let core = sorm.getCore()
@@ -254,6 +255,7 @@ export function getFieldMixins(){
     } as IAPP
   } as IMixin<IFieldProps>]
 }
+// 多选一
 export function getFieldGroupMixin(){
   return [{
     didMount(){
@@ -301,9 +303,9 @@ export function getFieldGroupMixin(){
     } as IAPP
   } as IMixin<IFieldGroupProps<string>>]
 }
+
+// 多选多
 export function getFieldGroupArrayMixin(){
-  // 多选值
-      
   return [{
     didMount(){
       let {props} = this.props
@@ -336,12 +338,17 @@ export function getFieldGroupArrayMixin(){
     },
     methods: {
       onChange(e){
+        // let {limit = Number.MAX_SAFE_INTEGER} = this.props.props
         let {value: indexValue} = e.detail
         if(!Array.isArray(indexValue)){
           return console.error(`[value change error]: 非数组值`)
         }
+        let values = indexValue.map((v,index) => this.data.dataSource[index].value)
+        // if(values.length > limit)return my.alert({
+        //   title: `最多只能选择${limit}项`
+        // })
         this.props.onChange && this.props.onChange({
-          value: indexValue.map((v,index) => this.data.dataSource[index].value) 
+          value: values
         })
       }
     } as IAPP

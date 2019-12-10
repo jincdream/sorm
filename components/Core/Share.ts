@@ -169,7 +169,8 @@ export interface IFieldProps{
 export interface IMixin<T> extends IAPP{
   props?: T,
   data?: any,
-  didMount?: ()=>{},
+  didMount?: () => {},
+  didUpdate?: () => {},
   methods?: object,
   // selfValidate?: Promise<{isError: boolean, errors: Array<string>}>,
 }
@@ -190,6 +191,6 @@ export interface IFieldGroupProps<T>{
   props: {
     value?: T,
     dataSource: Array<IDataSource>,
-  },
+  }
   onChange: (e: any) => {}
 }

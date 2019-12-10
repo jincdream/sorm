@@ -3,5 +3,5 @@
 </template>
 
 <sorm schema="{{schema}}" style="padding:10px">
-  <template slot="items" slot-scope="props" is="{{props.component.name}}" />
+  <!-- <template slot="items" slot-scope="props" is="{{props.component.name}}" /> -->
 </sorm>

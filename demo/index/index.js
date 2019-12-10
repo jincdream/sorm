@@ -89,6 +89,7 @@ Page({
           },
           "x-component": "checkbox",
           "x-component-props": {
+            "limit": 2,
             "value":["react","vue"],
             "dataSource": [
                { "value": "angular", "label": "AngularJS", "color": "red" },

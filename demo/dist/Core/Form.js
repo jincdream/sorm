@@ -66,7 +66,6 @@ function () {
           rules = componentSchemaDesc["x-rules"],
           childrenSchema = componentSchemaDesc.properties;
       var required = false;
-      console.log(cprops.value, "cprops.value");
       var field = core.registerField({
         name: thisKey,
         initialValue: cprops.value,
@@ -139,11 +138,12 @@ export function getFormMixins() {
       reset: function reset() {
         var onReset = this.props.onReset;
         var core = sorm.getCore();
-        console.log(core.getFormState(function (state) {
-          // console.log(state,state.initialValues)
-          core.notify(CustomEventName.SromRest, state.initialValues);
-          onReset && onReset(state.initialValues);
-        }));
+        core.reset().then(function () {
+          core.getFormState(function (state) {
+            core.notify(CustomEventName.SromRest, state.initialValues);
+            onReset && onReset(state.initialValues);
+          });
+        });
       },
       submit: function submit(e) {
         var core = sorm.getCore();
@@ -309,7 +309,8 @@ export function getFieldMixins() {
       onChanging: function onChanging(e) {}
     }
   }];
-}
+} // 多选一
+
 export function getFieldGroupMixin() {
   return [{
     didMount: function didMount() {
@@ -359,9 +360,9 @@ export function getFieldGroupMixin() {
       }
     }
   }];
-}
+} // 多选多
+
 export function getFieldGroupArrayMixin() {
-  // 多选值
   return [{
     didMount: function didMount() {
       var props = this.props.props;
@@ -403,16 +404,21 @@ export function getFieldGroupArrayMixin() {
       onChange: function onChange(e) {
         var _this3 = this;
 
+        // let {limit = Number.MAX_SAFE_INTEGER} = this.props.props
         var indexValue = e.detail.value;
 
         if (!Array.isArray(indexValue)) {
           return console.error("[value change error]: \u975E\u6570\u7EC4\u503C");
         }
 
+        var values = indexValue.map(function (v, index) {
+          return _this3.data.dataSource[index].value;
+        }); // if(values.length > limit)return my.alert({
+        //   title: `最多只能选择${limit}项`
+        // })
+
         this.props.onChange && this.props.onChange({
-          value: indexValue.map(function (v, index) {
-            return _this3.data.dataSource[index].value;
-          })
+          value: values
         });
       }
     }

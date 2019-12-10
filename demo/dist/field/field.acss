@@ -21,6 +21,8 @@
 .fld_layout_temp1 .fld_error {
   padding-left: 25%;
   margin: 0 0 0 10px;
+  position: relative;
+  z-index: 2;
 }
 .fld_layout_temp1 .fld_error .fld_err_text {
   color: #F23C3C;
