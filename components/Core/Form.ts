@@ -12,7 +12,7 @@ import {
   IValidate
 } from './Share'
 
-import {createForm, IForm} from '@uform/core'
+import {createForm, IForm, LifeCycleTypes} from '@uform/core'
 import isEqual from 'lodash.isequal'
 
 enum CustomEventName {
@@ -234,7 +234,7 @@ export function getFieldMixins(){
           keyName,
           validate,
         } = this.props
-        let value = e.value || e.detail.value
+        let value = e.detail ? e.detail.value : e.value
         let core = getFormCore()
         // setFieldValue(value)
         core.setFieldValue(keyName,value)

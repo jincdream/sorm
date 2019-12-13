@@ -267,7 +267,7 @@ export function getFieldMixins() {
             switch (_context4.prev = _context4.next) {
               case 0:
                 _this$props4 = this.props, getFormCore = _this$props4.getFormCore, keyName = _this$props4.keyName, validate = _this$props4.validate;
-                value = e.value || e.detail.value;
+                value = e.detail ? e.detail.value : e.value;
                 core = getFormCore(); // setFieldValue(value)
 
                 core.setFieldValue(keyName, value);

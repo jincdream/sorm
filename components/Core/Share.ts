@@ -1,3 +1,5 @@
+import { IForm } from "@uform/core";
+
 export enum NativeFormItemName {
   input = "input",
   textarea = "textarea",
@@ -125,7 +127,7 @@ export interface ISormComponents{
   childrends: Array<ISormComponents>
 }
 interface IGetCore{
-  (): any
+  (): IForm
 }
 interface IFormCore {
 

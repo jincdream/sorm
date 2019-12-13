@@ -2,7 +2,7 @@
   <input
     class="{{'fld_input ' + (props.className || '') + (isError ? ' fld_input_error' : '')}}"
     style="{{props.style}}"
-    controlled="{{true}}"
+    controlled="{{false}}"
     value="{{uiValue}}"
     onInput="onChange"
     onBlur="onBlur"
@@ -30,7 +30,7 @@
     class="{{'fld_textarea ' + (props.className || '') + (isError ? ' fld_input_error' : '')}}"
     style="{{props.style}}"
     value="{{uiValue}}"
-    controlled="{{true}}"
+    controlled="{{false}}"
     onInput="onChange"
     onBlur="onBlur"
     onFocus="onFocus"
@@ -45,7 +45,7 @@
   />
 </template>
 
-<template name="radio">
+<template name="radio-group">
   <s-radio
     key="{{fieldKey}}"
     onChange="onChange"
@@ -53,7 +53,7 @@
     props="{{props}}"/>
 </template>
 
-<template name="checkbox">
+<template name="checkbox-group">
   <s-checkbox
     key="{{fieldKey}}"
     onChange="onChange"

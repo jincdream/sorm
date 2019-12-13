@@ -1,5 +1,5 @@
 {
-  "name": "sorm",
+  "name": "@uform/miniapp-schema-renderer",
   "version": "0.0.1",
   "description": "小程序动态表单组件",
   "repository": {
@@ -50,7 +50,7 @@
   ],
   "lint-staged": {},
   "dependencies": {
-    "@uform/core": "^1.0.0-alpha.7",
+    "@uform/core": "^1.0.0-alpha.8",
     "lodash.isequal": "^4.5.0"
   }
 }

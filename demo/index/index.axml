@@ -3,7 +3,7 @@
 </template>
 
 <view style="background:#fff">
-  <sorm schema="{{schema}}" onSubmit="submit">
+  <schema-renderer schema="{{schema}}" onSubmit="submit">
     <!-- <template slot="items" slot-scope="props" is="{{props.component.name}}" /> -->
-  </sorm>
+  </schema-renderer>
 </view>

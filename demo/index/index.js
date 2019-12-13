@@ -5,21 +5,7 @@ Page({
       "title": "我是表单标题",
       "description": "我是表单描述",
       "properties": {
-        // "fieldA": {
-        //   "type": "number",
-        //   "title": "字段A"
-        // },
-        // "fieldB": {
-        //   "type": "number",
-        //   "title": "字段B"
-        // },
-        "custom":{
-          "type": "object",
-          "title": "自定义",
-          "x-component": "custom",
-          "x-component-props": {}
-        },
-        "name": {
+        "input": {
           "type": "string",
           "title": "输入框",
           "default": "xxx",
@@ -28,7 +14,7 @@ Page({
             
           },
           // 解析 x-component
-          "x-component": "Input",
+          "x-component": "input",
           "x-component-props": {
             // "value": "{{root.fieldA === 'xxx' ? 0 : 1}}",
             // "disabled": "{{root.fieldA > root.fieldB}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
@@ -37,7 +23,7 @@ Page({
             // "required": true
           }]
         },
-        "name1": {
+        "textarea": {
           "type": "string",
           "title": "多行输入",
           "default": "xxx",
@@ -48,14 +34,14 @@ Page({
           // 解析 x-component
           "x-component": "textarea",
           "x-component-props": {
-            // "value": "{{root.fieldA === 'xxx' ? 0 : 1}}",
+            "value": "{{root.fieldA === 'xxx' ? 0 : 1}}",
             // "disabled": "{{root.fieldA > root.fieldB}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
           },
           "x-rules": [{
             "required": true
           }]
         },
-        "name22": {
+        "radio-group": {
           "type": "string",
           "title": "单选按钮",
           "default": "xxx",
@@ -63,7 +49,7 @@ Page({
           "x-props" : {
             
           },
-          "x-component": "radio",
+          "x-component": "radio-group",
           "x-component-props": {
             "value":"angular",
             "dataSource": [
@@ -79,7 +65,7 @@ Page({
             "required": true
           }]
         },
-        "name3a23": {
+        "checkbox-group": {
           "type": "string",
           "title": "多项选择",
           "default": "xxx",
@@ -87,7 +73,7 @@ Page({
           "x-props" : {
             
           },
-          "x-component": "checkbox",
+          "x-component": "checkbox-group",
           "x-component-props": {
             "limit": 2,
             "value":["react","vue"],
@@ -104,7 +90,7 @@ Page({
             "required": true
           }]
         },
-        "name123": {
+        "switch": {
           "type": "string",
           "title": "开关",
           "default": "xxx",
@@ -120,7 +106,7 @@ Page({
             "required": true
           }]
         },
-        "name1f023": {
+        "slider": {
           "type": "string",
           "title": "滑动选择",
           "default": "xxx",
@@ -139,7 +125,7 @@ Page({
             "required": true
           }]
         },
-        "date1": {
+        "date-picker": {
           "type": "string",
           "title": "日期选择",
           "default": "xxx",
@@ -168,7 +154,7 @@ Page({
             "required": true
           }]
         },
-        "nxame1023": {
+        "picker": {
           "type": "string",
           "title": "下拉选择",
           "default": "xxx",
