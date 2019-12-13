@@ -3,31 +3,90 @@
   vertical-align: middle;
   line-height: 1em;
 }
+.fld_layout_temp1 {
+  font-size: 14px;
+  padding-bottom: 50px;
+}
+.fld_layout_temp1 .fld_placeholder {
+  font-size: 14px;
+  font-weight: normal;
+}
 .fld_layout_temp1 .fld {
+  border-bottom: 1px solid #eeeeee;
+  padding: 15px;
+}
+.fld_layout_temp1 .fld_wrap {
+  display: flex;
+}
+.fld_layout_temp1 .fld_wrap .fld_label {
+  width: 80px;
+  padding-top: 4px;
+}
+.fld_layout_temp1 .fld_wrap .fld_label .fld_lb_wran {
+  width: 10px;
+  padding-top: 4px;
+}
+.fld_layout_temp1 .fld_wrap .fld_com {
+  flex: 1;
+  font-size: 0;
+}
+.fld_layout_temp1 .fld_wrap .fld_com text {
+  font-size: 14px;
+}
+.fld_layout_temp1 .fld_wrap .fld_com .fld_input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0;
+  font-size: 14px;
+}
+.fld_layout_temp1 .fld_wrap .fld_com .fld_textarea {
+  width: 100%;
+  font-size: 14px;
+  padding-top: 4px;
+  padding-left: 0;
+  min-height: 4em;
+}
+.fld_layout_temp1 .sm_btn.default {
+  padding: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  height: 42px;
+  line-height: 42px;
+  border-radius: 0;
+  font-size: 16px;
+}
+.fld_layout_temp1 .fld_error {
+  padding: 10px 0 0 10px;
+  color: red;
+}
+.fld_layout_temp2 .fld {
   margin: 0 0 10px 0;
 }
-.fld_layout_temp1 .fld_btns > .fld_before,
-.fld_layout_temp1 .fld_label,
-.fld_layout_temp1 .fld_com {
+.fld_layout_temp2 .fld_btns > .fld_before,
+.fld_layout_temp2 .fld_label,
+.fld_layout_temp2 .fld_com {
   display: inline-block;
   vertical-align: middle;
 }
-.fld_layout_temp1 .fld_btns > .fld_before,
-.fld_layout_temp1 .fld_label {
+.fld_layout_temp2 .fld_btns > .fld_before,
+.fld_layout_temp2 .fld_label {
   width: 25%;
   margin: 0 10px 0 0;
   text-align: right;
 }
-.fld_layout_temp1 .fld_error {
+.fld_layout_temp2 .fld_error {
   padding-left: 25%;
   margin: 0 0 0 10px;
   position: relative;
   z-index: 2;
 }
-.fld_layout_temp1 .fld_error .fld_err_text {
+.fld_layout_temp2 .fld_error .fld_err_text {
   color: #F23C3C;
   font-size: 12px;
 }
-.fld_layout_temp1 .fld_com {
+.fld_layout_temp2 .fld_com {
   width: 70%;
 }

@@ -1,4 +1,6 @@
  <picker
+  style="{{props.style}}"
+  class="{{props.className + ' sm_picker_group'}}"
   onChange="onChange"
   value="{{indexValue}}"
   range="{{dataSource}}"

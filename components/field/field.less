@@ -4,6 +4,68 @@
   line-height: 1em;
 }
 .fld_layout_temp1{
+  font-size: 14px;
+  padding-bottom: 50px;
+  .fld_placeholder{
+    font-size: 14px;
+    font-weight: normal;
+  }
+  .fld{
+    border-bottom: 1px solid rgb(238, 238, 238);
+    padding: 15px;
+
+  }
+  .fld_wrap{
+    display: flex;
+
+    .fld_label{
+      width: 80px;
+      padding-top: 4px;
+      .fld_lb_wran{
+        width: 10px;
+        padding-top:4px;
+      }
+    }
+    .fld_com{
+      flex: 1;
+      font-size: 0;
+      text{
+        font-size: 14px;
+      }
+      .fld_input{
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0;
+        font-size: 14px;
+      }
+      .fld_textarea{
+
+        width: 100%;
+        font-size: 14px;
+        padding-top:4px;
+        padding-left: 0;
+        min-height: 4em;
+      }
+    }
+  }
+  .sm_btn.default{
+    padding: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    height: 42px;
+    line-height: 42px;
+    border-radius: 0;
+    font-size: 16px;
+  }
+  .fld_error{
+    padding: 10px 0 0 10px;
+    color: red;
+  }
+}
+.fld_layout_temp2{
   .fld{
     margin: 0 0 10px 0;
   }

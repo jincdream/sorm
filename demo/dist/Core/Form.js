@@ -31,7 +31,6 @@ var Sorm =
 /*#__PURE__*/
 function () {
   function Sorm() {
-    this.fieldComponents = {};
     this.core = createForm({
       onChange: function onChange(values) {},
       //表单提交事件回调
@@ -39,7 +38,9 @@ function () {
       //表单重置事件回调
       onReset: function onReset() {},
       //表单校验失败事件回调
-      onValidateFailed: function onValidateFailed(validated) {}
+      onValidateFailed: function onValidateFailed(validated) {
+        console.log(validated);
+      }
     });
   }
 
@@ -266,7 +267,7 @@ export function getFieldMixins() {
             switch (_context4.prev = _context4.next) {
               case 0:
                 _this$props4 = this.props, getFormCore = _this$props4.getFormCore, keyName = _this$props4.keyName, validate = _this$props4.validate;
-                value = e.value || e.detail.value;
+                value = e.detail ? e.detail.value : e.value;
                 core = getFormCore(); // setFieldValue(value)
 
                 core.setFieldValue(keyName, value);

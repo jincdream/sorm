@@ -6,7 +6,7 @@
     "enableWK": "YES",
     "enableDSL": "YES",
     "enableJSC": "YES",
-    "defaultTitle": "小程序动态表单",
+    "defaultTitle": "动态表单Sorm",
     "backgroundColor": "#fff",
     "pullRefresh": false,
     "allowsBounceVertical": true

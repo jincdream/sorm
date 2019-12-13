@@ -1,12 +1,8 @@
 <template name="input">
   <input
-    class="{{props.className}}"
-    style="{{
-      (isError ? 'border: 1px solid #F23C3C;' : 'border:1px solid rgb(238, 238, 238);') +
-      'padding:5px;' +
-      props.style
-    }}"
-    controlled="{{true}}"
+    class="{{'fld_input ' + (props.className || '') + (isError ? ' fld_input_error' : '')}}"
+    style="{{props.style}}"
+    controlled="{{false}}"
     value="{{uiValue}}"
     onInput="onChange"
     onBlur="onBlur"
@@ -14,9 +10,9 @@
     onConfirm="onConfirm"
     type="{{props.type}}"
     password="{{props.password}}"
-    placeholder="{{props.placeholder}}"
+    placeholder="{{props.placeholder || '请输入'}}"
     placeholder-style="{{props['placeholder-style']}}"
-    placeholder-class="{{props['placeholder-class']}}"
+    placeholder-class="{{props['placeholder-class']+' fld_placeholder'}}"
     disabled="{{props.disabled === true ? true : false}}"
     maxlength="{{props.maxlength}}"
     focus="{{props.focus}}"
@@ -31,18 +27,15 @@
 
 <template name="textarea">
   <textarea
-    class="{{props.className}}"
-    style="{{
-      (isError ? 'border: 1px solid #F23C3C;' : 'border:1px solid rgb(238, 238, 238);') +
-      props.style
-    }}"
+    class="{{'fld_textarea ' + (props.className || '') + (isError ? ' fld_input_error' : '')}}"
+    style="{{props.style}}"
     value="{{uiValue}}"
-    controlled="{{true}}"
+    controlled="{{false}}"
     onInput="onChange"
     onBlur="onBlur"
     onFocus="onFocus"
     onConfirm="onConfirm"
-    placeholder="{{props.placeholder}}"
+    placeholder="{{props.placeholder || '请输入'}}"
     placeholder-style="{{props['placeholder-style']}}"
     placeholder-class="{{props['placeholder-class']}}"
     auto-height="{{props['auto-height']}}"
@@ -52,7 +45,7 @@
   />
 </template>
 
-<template name="radio">
+<template name="radio-group">
   <s-radio
     key="{{fieldKey}}"
     onChange="onChange"
@@ -60,7 +53,7 @@
     props="{{props}}"/>
 </template>
 
-<template name="checkbox">
+<template name="checkbox-group">
   <s-checkbox
     key="{{fieldKey}}"
     onChange="onChange"
@@ -72,8 +65,8 @@
 <template name="switch">
   <switch
     class="{{props.className}}"
-    style="{{props.style}}"
     onChange="onChange"
+    color="{{color}}"
     disabled="{{props.disabled}}"
     checked="{{uiValue}}"
     aria-label="{{props['aria-label']}}" />
@@ -81,7 +74,8 @@
 
 <template name="slider">
   <!-- padding: 滑块圆心在直线终点，所以需要额外的宽度 -->
-  <view style="{{`position:relative;overflow:hidden;padding:${(props['handle-size'] || 22 + 2) / 2}px`}}">
+  <view
+    style="{{`position:relative;overflow:hidden;padding:2px ${(props['handle-size'] || 22 + 2) / 2}px`}}">
     <slider
       key="{{fieldKey}}"
       class="{{props.className}}"
@@ -120,20 +114,22 @@
 </template>
 
 <view class="fld">
-  <view class="fld_label">
-    <text class="fld_lb_text" a:if="{{required}}" style="color:red">*</text>
-    <text class="fld_lb_text">{{label}}</text>
+  <view class="fld_wrap">
+    <view class="fld_label">
+      <text class="fld_lb_text fld_lb_wran" style="color:red;">{{required? '*': ''}}</text>
+      <text class="fld_lb_text">{{label}}</text>
+    </view>
+    <view class="fld_com">
+      <template is="{{component.name}}" data="{{
+        props: component.props,
+        isError: isError,
+        onChange:onChange,
+        uiValue: uiValue,
+        fieldKey: fieldKey
+      }}" />
+    </view>
   </view>
-  <view class="fld_com">
-    <template is="{{component.name}}" data="{{
-      props: component.props,
-      isError: isError,
-      onChange:onChange,
-      uiValue: uiValue,
-      fieldKey: fieldKey
-    }}" />
-  </view>
-  <view class="fld_error">
+  <view class="fld_error" a:if="{{isError}}">
     <text class="fld_err_text" a:for="{{errors}}">{{item}}</text>
   </view>
 </view>

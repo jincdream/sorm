@@ -758,20 +758,20 @@
     "@types/unist" "*"
     "@types/vfile-message" "*"
 
-"@uform/core@^1.0.0-alpha.7":
-  version "1.0.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@uform/core/-/core-1.0.0-alpha.7.tgz#145ee43512990e79685ef0e9d44db1cc63c49098"
-  integrity sha512-RQZX4mzZ1lwxDtje4jvt9vexOiPtNK/AfPUlIk5OhA1RPGuGt0wnKRJiCHkJ/JRenBii3bkLAgL0sPPymAnDwQ==
+"@uform/core@^1.0.0-alpha.8":
+  version "1.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@uform/core/-/core-1.0.0-alpha.8.tgz#7710464baf510812a5ceb82bcd8f3f454291582a"
+  integrity sha512-YAfAqS8xvq5Er/Jic+LvDo747lvCxXLaNRxyin2PWVVgXrZKHS2J5+2JN3vHsLWoEmgy9SA8LMlD1NW6rsFtbg==
   dependencies:
-    "@uform/shared" "^1.0.0-alpha.7"
+    "@uform/shared" "^1.0.0-alpha.8"
     "@uform/types" "^0.4.0"
-    "@uform/validator" "^1.0.0-alpha.7"
+    "@uform/validator" "^1.0.0-alpha.8"
     immer "^3.2.0"
 
-"@uform/shared@^1.0.0-alpha.7":
-  version "1.0.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@uform/shared/-/shared-1.0.0-alpha.7.tgz#d237f43dd568b8a424a2f9fd2ed3436afdb2f383"
-  integrity sha512-FVwUgrPNhVC4bZ0ZWbYO4rI+92lzbfjFMMy9aEVd8JjzvF57MShkiUwhn+uKDgXLI/9okNCdiN5b9oF6UZMl/Q==
+"@uform/shared@^1.0.0-alpha.8":
+  version "1.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@uform/shared/-/shared-1.0.0-alpha.8.tgz#4a8cd05b3feec3db96847073b8e4aeaf80248d2b"
+  integrity sha512-PUH1IW6eUjUylv9aF6L9nPS3MPI4D3qohq4eWby0PfLcNaUkarfwJhbSsWAxY85VPYZ9FcTJZyTYNuBpsvvy8A==
   dependencies:
     "@uform/types" "^0.4.0"
     camel-case "^3.0.0"
@@ -785,12 +785,12 @@
   dependencies:
     rxjs "^6.3.3"
 
-"@uform/validator@^1.0.0-alpha.7":
-  version "1.0.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@uform/validator/-/validator-1.0.0-alpha.7.tgz#122ce5ff5568e6cc8c2a3520e647e90bcbcf6a26"
-  integrity sha512-3GwOu4nCnK5Qi2JBTfX9FxLT9YdDBHySUP98Z3mZHSwyWWEDHE0D0WU3KCfyO1lAMnpo/Jb/wEfP1d1Z+tsZiQ==
+"@uform/validator@^1.0.0-alpha.8":
+  version "1.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@uform/validator/-/validator-1.0.0-alpha.8.tgz#0b3a712ed8eee4ecf247e11d5584db079659bdb6"
+  integrity sha512-4WLylrWifzacYmbMg8CpwghdQuCTRO3g8pxk6s4JLzZKU0ONcwD1f9m9Fq4mWw2NnpgE4bi/quZfWvhvwR0cFQ==
   dependencies:
-    "@uform/shared" "^1.0.0-alpha.7"
+    "@uform/shared" "^1.0.0-alpha.8"
     "@uform/types" "^0.4.0"
 
 accord@^0.29.0:
@@ -1451,9 +1451,9 @@ convert-source-map@^1.5.0, convert-source-map@^1.7.0:
     safe-buffer "~5.1.1"
 
 cool-path@^0.1.1:
-  version "0.1.17"
-  resolved "https://registry.yarnpkg.com/cool-path/-/cool-path-0.1.17.tgz#bca19bce0518509093603a3667365fefffe15ed5"
-  integrity sha512-xH+/jmnluduMonOwWX3ieOhwZEuXzUAKIV16tYF17Gz7HwDbcbHKcVsIVMdsiSWA0TtU+CpMB7bEy+FG2t7mjw==
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/cool-path/-/cool-path-0.1.18.tgz#4f2722cec5aa458702cfeffd3c8679c156e8d6ce"
+  integrity sha512-LyJPFC3I9vX7jDVUtNT+SziktusjtbdnFUXirC3u+fRbWQbIOI6ERx2l8n+maM9uhISAQmExY4NNd3Oy+T9tWQ==
 
 copy-descriptor@^0.1.0:
   version "0.1.1"
