@@ -31,7 +31,6 @@ var Sorm =
 /*#__PURE__*/
 function () {
   function Sorm() {
-    this.fieldComponents = {};
     this.core = createForm({
       onChange: function onChange(values) {},
       //表单提交事件回调
@@ -39,7 +38,9 @@ function () {
       //表单重置事件回调
       onReset: function onReset() {},
       //表单校验失败事件回调
-      onValidateFailed: function onValidateFailed(validated) {}
+      onValidateFailed: function onValidateFailed(validated) {
+        console.log(validated);
+      }
     });
   }
 

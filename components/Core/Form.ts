@@ -12,7 +12,7 @@ import {
   IValidate
 } from './Share'
 
-import {createForm} from '@uform/core'
+import {createForm, IForm} from '@uform/core'
 import isEqual from 'lodash.isequal'
 
 enum CustomEventName {
@@ -39,7 +39,6 @@ const Supported: ISupportedFormItem = {
 }
 class Sorm {
   constructor(){
-    this.fieldComponents = {}
     this.core = createForm({
       onChange: (values) => {
 
@@ -54,13 +53,12 @@ class Sorm {
       },
       //表单校验失败事件回调
       onValidateFailed:(validated) => {
-
+        console.log(validated)
       }
     })
   }
   private initValue: any
-  private core: any
-  private fieldComponents: any
+  private core: IForm
   private _schema: ISchema
   private schemaParser(schema:ISchema,parentKey?: string): Array<ISormComponents> {
     let {properties = {}} = schema
