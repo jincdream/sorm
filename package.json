@@ -1,5 +1,5 @@
 {
-  "name": "@uform/miniapp-schema-renderer",
+  "name": "miniapp-schema-form",
   "version": "0.0.1",
   "description": "小程序动态表单组件",
   "repository": {

@@ -34,7 +34,7 @@ Page({
           // 解析 x-component
           "x-component": "textarea",
           "x-component-props": {
-            "value": "{{root.fieldA === 'xxx' ? 0 : 1}}",
+            "value": "输入值",
             // "disabled": "{{root.fieldA > root.fieldB}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
           },
           "x-rules": [{
