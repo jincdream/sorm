@@ -5,6 +5,9 @@ Page({
       "title": "我是表单标题",
       "description": "我是表单描述",
       "properties": {
+        "custom": {
+          "x-component": "custom"
+        },
         "input": {
           "type": "string",
           "title": "输入框",
@@ -180,6 +183,15 @@ Page({
         }
       }
     }
+  },
+  changeSchema(){
+    this.data.schema.properties.custom["x-component"] = "input"
+    this.setData({
+      schema: {...this.data.schema}
+    },()=>{
+      console.log(this.data,"ss")
+    })
+    
   },
   onLoad(query) {
     

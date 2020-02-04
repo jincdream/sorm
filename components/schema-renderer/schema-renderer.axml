@@ -1,4 +1,4 @@
-<view style="{{style}}" class="{{`sorm_layout fld_layout_temp1 ${className}`}}">
+<view key="{{schemaKey}}" style="{{style}}" class="{{`sorm_layout fld_layout_temp1 ${className}`}}">
   <view a:for="{{schema}}">
     <!-- native items -->
     <field

@@ -15,6 +15,7 @@ import {
 import {createForm, IForm, LifeCycleTypes} from '@uform/core'
 import isEqual from 'lodash.isequal'
 
+
 enum CustomEventName {
   ValidatedError = "validatedError",
   SromRest = 'sormReset'
@@ -38,7 +39,8 @@ const Supported: ISupportedFormItem = {
   "picker-view": true
 }
 class Sorm {
-  constructor(){
+  constructor(){}
+  public init(){
     this.core = createForm({
       onChange: (values) => {
 
@@ -127,24 +129,39 @@ class Sorm {
   }
 }
 
+const InitForm = function(ref: IMixin<IFormProps> ){
+  let {
+      schema,
+      style,
+      class: className
+    } = ref.props
+    let { sorm } = ref
+    sorm.init()
+    let formCore = sorm.getCore()
+    let components = sorm.parse(schema)
+    ref.setData({
+      schema: components,
+      style,
+      className
+    })
+}
 
 export function getFormMixins(){
   let sorm = new Sorm()
   return [{
     didMount(){
-      let {
-        schema,
-        style,
-        class: className
-      } = this.props
-      let formCore = sorm.getCore()
-      let components = sorm.parse(schema)
-      this.setData({
-        schema: components,
-        style,
-        className
-      })
-      
+      this.init = true
+      this.sorm = sorm
+      InitForm(this)
+    },
+    didUpdate(props: IFormOption){
+      if(this.init){
+        this.init = false
+        return
+      }
+      InitForm(this)
+      this.init = true
+      console.log(props,"did")
     },
     methods: {
       reset(){

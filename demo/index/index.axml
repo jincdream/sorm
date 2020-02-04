@@ -1,9 +1,10 @@
 <template name="custom">
-  <!-- <view>123</view> -->
+  <view>{{props.component.name}}</view>
 </template>
 
 <view style="background:#fff">
+<button size="default" type="primary" onTap="changeSchema">Button</button>
   <schema-renderer schema="{{schema}}" onSubmit="submit">
-    <!-- <template slot="items" slot-scope="props" is="{{props.component.name}}" /> -->
+    <template slot="items" slot-scope="props" is="{{props.component.name}}" data="{{props}}" />
   </schema-renderer>
 </view>

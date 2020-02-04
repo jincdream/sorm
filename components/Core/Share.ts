@@ -172,8 +172,10 @@ export interface IMixin<T> extends IAPP{
   props?: T,
   data?: any,
   didMount?: () => {},
-  didUpdate?: () => {},
+  didUpdate?: (props: T) => {},
   methods?: object,
+  init?: boolean,
+  sorm?: any
   // selfValidate?: Promise<{isError: boolean, errors: Array<string>}>,
 }
 export interface IAPP{
