@@ -153,7 +153,8 @@ export interface ISchemaPareserResult{
 export interface IFormProps{
   style: string,
   class: string,
-  schema: ISchema
+  schema: ISchema,
+  onSubmit?: (values: object) => void
 }
 export interface IFieldProps{
   style: string,

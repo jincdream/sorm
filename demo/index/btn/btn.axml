@@ -1,0 +1,1 @@
+<button class="sm_btn default" onTap="submit" type="primary">自定义按钮</button>

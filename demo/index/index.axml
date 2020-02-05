@@ -4,7 +4,8 @@
 
 <view style="background:#fff">
 <button size="default" type="primary" onTap="changeSchema">Button</button>
-  <schema-renderer schema="{{schema}}" onSubmit="submit">
+  <schema-renderer schema="{{schema}}" onSubmit="formSubmit">
     <template slot="items" slot-scope="props" is="{{props.component.name}}" data="{{props}}" />
+    <btn slot="footer" slot-scope="footer" api="{{footer}}"/>
   </schema-renderer>
 </view>

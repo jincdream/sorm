@@ -227,7 +227,7 @@ Page({
       path: 'pages/index/index',
     };
   },
-  submit(res){
+  formSubmit(res){
     console.log(res)
 
     my.alert({
