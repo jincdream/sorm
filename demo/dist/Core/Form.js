@@ -126,7 +126,8 @@ var InitForm = function InitForm(ref) {
   var _ref$props = ref.props,
       schema = _ref$props.schema,
       style = _ref$props.style,
-      className = _ref$props["class"];
+      className = _ref$props["class"],
+      onSubmit = _ref$props.onSubmit;
   var sorm = ref.sorm;
   sorm.init();
   var formCore = sorm.getCore();
@@ -135,7 +136,32 @@ var InitForm = function InitForm(ref) {
     schema: components,
     style: style,
     className: className,
-    schemaKey: Date.now().toString(32)
+    schemaKey: Date.now().toString(32),
+    useButton: !!onSubmit,
+    submit: function submit() {
+      ref.submit();
+    },
+    reset: function reset() {
+      ref.reset();
+    },
+    getValues: function getValues() {
+      return regeneratorRuntime.async(function getValues$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              return _context.abrupt("return", new Promise(function (resolve, reject) {
+                sorm.getCore().getFormState(function (state) {
+                  resolve(state.values);
+                });
+              }));
+
+            case 1:
+            case "end":
+              return _context.stop();
+          }
+        }
+      });
+    }
   });
 };
 
@@ -158,16 +184,10 @@ export function getFormMixins() {
     },
     methods: {
       reset: function reset() {
-        var onReset = this.props.onReset;
-        var core = sorm.getCore();
-        core.reset().then(function () {
-          core.getFormState(function (state) {
-            core.notify(CustomEventName.SromRest, state.initialValues);
-            onReset && onReset(state.initialValues);
-          });
-        });
+        InitForm(this);
+        this.init = true;
       },
-      submit: function submit(e) {
+      submit: function submit() {
         var core = sorm.getCore();
         var _this$props = this.props,
             onSubmit = _this$props.onSubmit,
@@ -186,28 +206,28 @@ export function getFormMixins() {
 var selfValidate = function selfValidate(validate) {
   var res, _res$errors, errors, errData, isError;
 
-  return regeneratorRuntime.async(function selfValidate$(_context) {
+  return regeneratorRuntime.async(function selfValidate$(_context2) {
     while (1) {
-      switch (_context.prev = _context.next) {
+      switch (_context2.prev = _context2.next) {
         case 0:
-          _context.next = 2;
+          _context2.next = 2;
           return regeneratorRuntime.awrap(validate());
 
         case 2:
-          res = _context.sent;
+          res = _context2.sent;
           _res$errors = res.errors, errors = _res$errors === void 0 ? [] : _res$errors;
           errData = errors[0] || {
             messages: []
           };
           isError = res.errors.length > 0;
-          return _context.abrupt("return", {
+          return _context2.abrupt("return", {
             isError: isError,
             errors: errData.messages
           });
 
         case 7:
         case "end":
-          return _context.stop();
+          return _context2.stop();
       }
     }
   });
@@ -227,13 +247,13 @@ export function getFieldMixins() {
       core.subscribe(function _callee(_ref) {
         var type, payload, _filter, _filter$, _filter$$path, path, _filter$$messages, messages, uiValue;
 
-        return regeneratorRuntime.async(function _callee$(_context2) {
+        return regeneratorRuntime.async(function _callee$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 type = _ref.type, payload = _ref.payload;
-                _context2.t0 = type;
-                _context2.next = _context2.t0 === CustomEventName.ValidatedError ? 4 : _context2.t0 === CustomEventName.SromRest ? 9 : 12;
+                _context3.t0 = type;
+                _context3.next = _context3.t0 === CustomEventName.ValidatedError ? 4 : _context3.t0 === CustomEventName.SromRest ? 9 : 12;
                 break;
 
               case 4:
@@ -250,7 +270,7 @@ export function getFieldMixins() {
                   });
                 }
 
-                return _context2.abrupt("break", 13);
+                return _context3.abrupt("break", 13);
 
               case 9:
                 uiValue = (payload || {})[keyName] || "";
@@ -262,14 +282,14 @@ export function getFieldMixins() {
                   fieldKey: keyName + Date.now()
                 });
 
-                return _context2.abrupt("break", 13);
+                return _context3.abrupt("break", 13);
 
               case 12:
-                return _context2.abrupt("break", 13);
+                return _context3.abrupt("break", 13);
 
               case 13:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
         });
@@ -283,44 +303,44 @@ export function getFieldMixins() {
       onChange: function onChange(e) {
         var _this$props3, getFormCore, keyName, validate, value, core, res;
 
-        return regeneratorRuntime.async(function onChange$(_context4) {
+        return regeneratorRuntime.async(function onChange$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 _this$props3 = this.props, getFormCore = _this$props3.getFormCore, keyName = _this$props3.keyName, validate = _this$props3.validate;
                 value = e.detail ? e.detail.value : e.value;
                 core = getFormCore(); // setFieldValue(value)
 
                 core.setFieldValue(keyName, value);
-                _context4.next = 6;
+                _context5.next = 6;
                 return regeneratorRuntime.awrap(selfValidate(function _callee2() {
-                  return regeneratorRuntime.async(function _callee2$(_context3) {
+                  return regeneratorRuntime.async(function _callee2$(_context4) {
                     while (1) {
-                      switch (_context3.prev = _context3.next) {
+                      switch (_context4.prev = _context4.next) {
                         case 0:
-                          _context3.next = 2;
+                          _context4.next = 2;
                           return regeneratorRuntime.awrap(core.validate(keyName));
 
                         case 2:
-                          return _context3.abrupt("return", _context3.sent);
+                          return _context4.abrupt("return", _context4.sent);
 
                         case 3:
                         case "end":
-                          return _context3.stop();
+                          return _context4.stop();
                       }
                     }
                   });
                 }));
 
               case 6:
-                res = _context4.sent;
+                res = _context5.sent;
                 this.setData(_extends({
                   uiValue: value
                 }, res));
 
               case 8:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
         }, null, this);

@@ -132,7 +132,8 @@ const InitForm = function(ref: IMixin<IFormProps> ){
   let {
       schema,
       style,
-      class: className
+      class: className,
+      onSubmit
     } = ref.props
     let { sorm } = ref
     sorm.init()
@@ -142,7 +143,21 @@ const InitForm = function(ref: IMixin<IFormProps> ){
       schema: components,
       style,
       className,
-      schemaKey: Date.now().toString(32)
+      schemaKey: Date.now().toString(32),
+      useButton: !!onSubmit,
+      submit: ()=>{
+        ref.submit()
+      },
+      reset: ()=>{
+        ref.reset()
+      },
+      getValues: async ()=>{
+        return new Promise((resolve,reject)=>{
+          sorm.getCore().getFormState((state)=>{
+            resolve(state.values)
+          })
+        })
+      }
     })
 }
 
@@ -164,16 +179,10 @@ export function getFormMixins(){
     },
     methods: {
       reset(){
-        let { onReset } = this.props
-        let core = sorm.getCore()
-        core.reset().then(()=>{
-          core.getFormState(state => {
-            core.notify(CustomEventName.SromRest,state.initialValues)
-            onReset && onReset(state.initialValues)
-          })
-        })
+        InitForm(this)
+        this.init = true
       },
-      submit(e){
+      submit(){
         let core = sorm.getCore()
         let { onSubmit, onError } = this.props
        

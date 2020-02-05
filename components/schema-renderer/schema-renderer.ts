@@ -12,9 +12,5 @@ Component({
   didMount() {},
   didUpdate() {},
   didUnmount() {},
-  methods: {
-    onChange(e){
-      console.log(e)
-    }
-  },
+  methods: {},
 });
