@@ -30,7 +30,11 @@ var Supported = {
 var Sorm =
 /*#__PURE__*/
 function () {
-  function Sorm() {
+  function Sorm() {}
+
+  var _proto = Sorm.prototype;
+
+  _proto.init = function init() {
     this.core = createForm({
       onChange: function onChange(values) {},
       //表单提交事件回调
@@ -42,9 +46,7 @@ function () {
         console.log(validated);
       }
     });
-  }
-
-  var _proto = Sorm.prototype;
+  };
 
   _proto.schemaParser = function schemaParser(schema, parentKey) {
     var _this = this;
@@ -52,7 +54,6 @@ function () {
     var _schema$properties = schema.properties,
         properties = _schema$properties === void 0 ? {} : _schema$properties;
     var keys = Object.keys(properties);
-    var core = this.core;
     return keys.map(function (keyName, index) {
       var componentSchemaDesc = properties[keyName];
       var thisKey = parentKey ? parentKey + '.' + keyName : keyName;
@@ -67,12 +68,14 @@ function () {
           rules = componentSchemaDesc["x-rules"],
           childrenSchema = componentSchemaDesc.properties;
       var required = false;
-      var field = core.registerField({
+
+      var field = _this.core.registerField({
         name: thisKey,
         initialValue: cprops.value,
         value: cprops.value,
         rules: rules
       });
+
       field.getState(function (state) {
         required = state.required;
       });
@@ -93,7 +96,7 @@ function () {
         fieldProps: fieldProps,
         childrends: _this.schemaParser(componentSchemaDesc, parentKey),
         getFormCore: function getFormCore() {
-          return core;
+          return _this.getCore();
         }
       };
     });
@@ -119,21 +122,39 @@ function () {
   return Sorm;
 }();
 
+var InitForm = function InitForm(ref) {
+  var _ref$props = ref.props,
+      schema = _ref$props.schema,
+      style = _ref$props.style,
+      className = _ref$props["class"];
+  var sorm = ref.sorm;
+  sorm.init();
+  var formCore = sorm.getCore();
+  var components = sorm.parse(schema);
+  ref.setData({
+    schema: components,
+    style: style,
+    className: className,
+    schemaKey: Date.now().toString(32)
+  });
+};
+
 export function getFormMixins() {
   var sorm = new Sorm();
   return [{
     didMount: function didMount() {
-      var _this$props = this.props,
-          schema = _this$props.schema,
-          style = _this$props.style,
-          className = _this$props["class"];
-      var formCore = sorm.getCore();
-      var components = sorm.parse(schema);
-      this.setData({
-        schema: components,
-        style: style,
-        className: className
-      });
+      this.init = true;
+      this.sorm = sorm;
+      InitForm(this);
+    },
+    didUpdate: function didUpdate(props) {
+      if (this.init) {
+        this.init = false;
+        return;
+      }
+
+      InitForm(this);
+      this.init = true;
     },
     methods: {
       reset: function reset() {
@@ -148,9 +169,9 @@ export function getFormMixins() {
       },
       submit: function submit(e) {
         var core = sorm.getCore();
-        var _this$props2 = this.props,
-            onSubmit = _this$props2.onSubmit,
-            onError = _this$props2.onError;
+        var _this$props = this.props,
+            onSubmit = _this$props.onSubmit,
+            onError = _this$props.onError;
         core.submit(function (res) {
           onSubmit && onSubmit(res);
         })["catch"](function (err) {
@@ -198,10 +219,10 @@ export function getFieldMixins() {
     didMount: function didMount() {
       var _this2 = this;
 
-      var _this$props3 = this.props,
-          component = _this$props3.component,
-          getFormCore = _this$props3.getFormCore,
-          keyName = _this$props3.keyName;
+      var _this$props2 = this.props,
+          component = _this$props2.component,
+          getFormCore = _this$props2.getFormCore,
+          keyName = _this$props2.keyName;
       var core = getFormCore();
       core.subscribe(function _callee(_ref) {
         var type, payload, _filter, _filter$, _filter$$path, path, _filter$$messages, messages, uiValue;
@@ -260,13 +281,13 @@ export function getFieldMixins() {
     },
     methods: {
       onChange: function onChange(e) {
-        var _this$props4, getFormCore, keyName, validate, value, core, res;
+        var _this$props3, getFormCore, keyName, validate, value, core, res;
 
         return regeneratorRuntime.async(function onChange$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this$props4 = this.props, getFormCore = _this$props4.getFormCore, keyName = _this$props4.keyName, validate = _this$props4.validate;
+                _this$props3 = this.props, getFormCore = _this$props3.getFormCore, keyName = _this$props3.keyName, validate = _this$props3.validate;
                 value = e.detail ? e.detail.value : e.value;
                 core = getFormCore(); // setFieldValue(value)
 

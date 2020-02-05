@@ -1,6 +1,6 @@
 {
-  "name": "@uform/miniapp-schema-renderer",
-  "version": "0.0.1",
+  "name": "miniapp-schema-form",
+  "version": "0.0.7",
   "description": "小程序动态表单组件",
   "repository": {
     "type": "git",
@@ -41,9 +41,9 @@
   },
   "scripts": {
     "lint-staged": "lint-staged",
-    "build": "yarn && NODE_ENV=production node scripts/compiler.js",
+    "build": "yarn --registry https://registry.npm.taobao.org --network-timeout 1000000 && NODE_ENV=production node scripts/compiler.js",
     "pub": "npm run build && node scripts/pub.js",
-    "dev": "yarn && node scripts/compiler.js"
+    "dev": "yarn --registry https://registry.npm.taobao.org --network-timeout 1000000 && node scripts/compiler.js"
   },
   "pre-commit": [
     "lint-staged"

@@ -15,6 +15,7 @@ import {
 import {createForm, IForm, LifeCycleTypes} from '@uform/core'
 import isEqual from 'lodash.isequal'
 
+
 enum CustomEventName {
   ValidatedError = "validatedError",
   SromRest = 'sormReset'
@@ -38,7 +39,8 @@ const Supported: ISupportedFormItem = {
   "picker-view": true
 }
 class Sorm {
-  constructor(){
+  constructor(){}
+  public init(){
     this.core = createForm({
       onChange: (values) => {
 
@@ -63,7 +65,6 @@ class Sorm {
   private schemaParser(schema:ISchema,parentKey?: string): Array<ISormComponents> {
     let {properties = {}} = schema
     let keys:Array<string> = Object.keys(properties)
-    let {core} = this
     return  keys.map((keyName,index)=>{
       let componentSchemaDesc = properties[keyName]
       let thisKey = parentKey ? parentKey + '.' + keyName : keyName
@@ -80,7 +81,7 @@ class Sorm {
 
       let required = false
 
-      let field = core.registerField({
+      let field = this.core.registerField({
         name: thisKey,
         initialValue: cprops.value,
         value: cprops.value,
@@ -107,7 +108,7 @@ class Sorm {
         fieldProps,
         childrends: this.schemaParser(componentSchemaDesc,parentKey),
         getFormCore:()=>{
-          return core
+          return this.getCore()
         },
       }
     })
@@ -127,24 +128,39 @@ class Sorm {
   }
 }
 
+const InitForm = function(ref: IMixin<IFormProps> ){
+  let {
+      schema,
+      style,
+      class: className
+    } = ref.props
+    let { sorm } = ref
+    sorm.init()
+    let formCore = sorm.getCore()
+    let components = sorm.parse(schema)
+    ref.setData({
+      schema: components,
+      style,
+      className,
+      schemaKey: Date.now().toString(32)
+    })
+}
 
 export function getFormMixins(){
   let sorm = new Sorm()
   return [{
     didMount(){
-      let {
-        schema,
-        style,
-        class: className
-      } = this.props
-      let formCore = sorm.getCore()
-      let components = sorm.parse(schema)
-      this.setData({
-        schema: components,
-        style,
-        className
-      })
-      
+      this.init = true
+      this.sorm = sorm
+      InitForm(this)
+    },
+    didUpdate(props: IFormOption){
+      if(this.init){
+        this.init = false
+        return
+      }
+      InitForm(this)
+      this.init = true
     },
     methods: {
       reset(){

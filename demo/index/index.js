@@ -5,6 +5,9 @@ Page({
       "title": "我是表单标题",
       "description": "我是表单描述",
       "properties": {
+        "custom": {
+          "x-component": "custom"
+        },
         "input": {
           "type": "string",
           "title": "输入框",
@@ -34,7 +37,7 @@ Page({
           // 解析 x-component
           "x-component": "textarea",
           "x-component-props": {
-            "value": "{{root.fieldA === 'xxx' ? 0 : 1}}",
+            "value": "输入值",
             // "disabled": "{{root.fieldA > root.fieldB}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
           },
           "x-rules": [{
@@ -180,6 +183,15 @@ Page({
         }
       }
     }
+  },
+  changeSchema(){
+    this.data.schema.properties.custom["x-component"] = "input"
+    this.setData({
+      schema: {...this.data.schema}
+    },()=>{
+      console.log(this.data,"ss")
+    })
+    
   },
   onLoad(query) {
     

@@ -1,7 +1,5 @@
 {
   "usingComponents": {
-    "schema-renderer": "../dist/schema-renderer/schema-renderer",
-    "field": "../dist/field/field",
-    "fields": "../fields/fields"
+    "schema-renderer": "../dist/schema-renderer/schema-renderer"
   }
 }

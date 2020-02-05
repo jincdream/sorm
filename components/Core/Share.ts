@@ -168,19 +168,28 @@ export interface IFieldProps{
   
   saveRef: (ref: any)=>{}
 }
+
+interface IFormMethods {
+  reset: () => void,
+  submit: () => void
+}
 export interface IMixin<T> extends IAPP{
   props?: T,
   data?: any,
-  didMount?: () => {},
-  didUpdate?: () => {},
-  methods?: object,
+  didMount?: () => void,
+  didUpdate?: (props: T) => void,
+  methods?: IFormMethods
   // selfValidate?: Promise<{isError: boolean, errors: Array<string>}>,
 }
 export interface IAPP{
   setData?: (data: object,callback?:()=>void)=>{},
   props?: any,
   data?: any,
-  isArrayValue?: boolean
+  isArrayValue?: boolean,
+  init?: boolean,
+  sorm?: any,
+  reset?: () => void,
+  submit?: () => void
 }
 interface IDataSource {
   value: string,

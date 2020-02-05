@@ -1,11 +1,7 @@
 import {
-  ISupportedFormItem
-} from '../Core/Share'
-import {
   getFormMixins
 } from '../Core/Form'
 declare var console: any;
-
 
 Component({
   mixins: getFormMixins(),
