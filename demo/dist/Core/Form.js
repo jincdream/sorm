@@ -54,7 +54,6 @@ function () {
     var _schema$properties = schema.properties,
         properties = _schema$properties === void 0 ? {} : _schema$properties;
     var keys = Object.keys(properties);
-    var core = this.core;
     return keys.map(function (keyName, index) {
       var componentSchemaDesc = properties[keyName];
       var thisKey = parentKey ? parentKey + '.' + keyName : keyName;
@@ -69,12 +68,14 @@ function () {
           rules = componentSchemaDesc["x-rules"],
           childrenSchema = componentSchemaDesc.properties;
       var required = false;
-      var field = core.registerField({
+
+      var field = _this.core.registerField({
         name: thisKey,
         initialValue: cprops.value,
         value: cprops.value,
         rules: rules
       });
+
       field.getState(function (state) {
         required = state.required;
       });
@@ -95,7 +96,7 @@ function () {
         fieldProps: fieldProps,
         childrends: _this.schemaParser(componentSchemaDesc, parentKey),
         getFormCore: function getFormCore() {
-          return core;
+          return _this.getCore();
         }
       };
     });
@@ -133,7 +134,8 @@ var InitForm = function InitForm(ref) {
   ref.setData({
     schema: components,
     style: style,
-    className: className
+    className: className,
+    schemaKey: Date.now().toString(32)
   });
 };
 
@@ -153,7 +155,6 @@ export function getFormMixins() {
 
       InitForm(this);
       this.init = true;
-      console.log(props, "did");
     },
     methods: {
       reset: function reset() {

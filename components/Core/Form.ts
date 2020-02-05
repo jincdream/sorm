@@ -65,7 +65,6 @@ class Sorm {
   private schemaParser(schema:ISchema,parentKey?: string): Array<ISormComponents> {
     let {properties = {}} = schema
     let keys:Array<string> = Object.keys(properties)
-    let {core} = this
     return  keys.map((keyName,index)=>{
       let componentSchemaDesc = properties[keyName]
       let thisKey = parentKey ? parentKey + '.' + keyName : keyName
@@ -82,7 +81,7 @@ class Sorm {
 
       let required = false
 
-      let field = core.registerField({
+      let field = this.core.registerField({
         name: thisKey,
         initialValue: cprops.value,
         value: cprops.value,
@@ -109,7 +108,7 @@ class Sorm {
         fieldProps,
         childrends: this.schemaParser(componentSchemaDesc,parentKey),
         getFormCore:()=>{
-          return core
+          return this.getCore()
         },
       }
     })
@@ -142,7 +141,8 @@ const InitForm = function(ref: IMixin<IFormProps> ){
     ref.setData({
       schema: components,
       style,
-      className
+      className,
+      schemaKey: Date.now().toString(32)
     })
 }
 
@@ -161,7 +161,6 @@ export function getFormMixins(){
       }
       InitForm(this)
       this.init = true
-      console.log(props,"did")
     },
     methods: {
       reset(){
