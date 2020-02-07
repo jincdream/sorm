@@ -15,7 +15,6 @@ import {
 import {createForm, IForm, LifeCycleTypes} from '@uform/core'
 import isEqual from 'lodash.isequal'
 
-
 enum CustomEventName {
   ValidatedError = "validatedError",
   SromRest = 'sormReset'
