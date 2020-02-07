@@ -1,6 +1,6 @@
 {
   "name": "miniapp-schema-form",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "小程序动态表单组件",
   "repository": {
     "type": "git",
