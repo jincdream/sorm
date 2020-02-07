@@ -9,12 +9,14 @@ import {
   ISupportedFormItem,
   IAPP,
   IFieldGroupProps,
-  IValidate
+  IValidate,
+  IExporession
 } from './Share'
 
 import {createForm, IForm, LifeCycleTypes} from '@uform/core'
 import isEqual from 'lodash.isequal'
 
+import ExpressionRun from './ExpressionRun'
 
 enum CustomEventName {
   ValidatedError = "validatedError",
@@ -62,6 +64,37 @@ class Sorm {
   private initValue: any
   private core: IForm
   private _schema: ISchema
+  private parseExpressions(props: object): Array<IExporession>{
+    let linkages = []
+    // 花括号
+    let checkBrace = /^\{\{(.*?)\}\}$/
+    // root.value
+    let checkRoot = /root\.value\.(\S*)/g
+    Object.keys(props).forEach((target) => {
+      let deps: Array<string> = []
+      let expression = {}
+      let value = props[target]
+      if(checkBrace.test(value) && checkRoot.test(value)){
+        let exp = value.replace(checkBrace,"$1")
+        exp.replace(/root\.value\.([a-zA-Z]*)/g,(m,a = "")=>{
+          let [name = ""] = a.split(".")
+          if(deps){
+            deps.push(name)
+          }
+        })
+        if(deps.length > 0){
+         linkages.push({
+            exp,
+            deps,
+            target: target
+          })
+        }
+        
+      }
+    })
+    
+    return linkages
+  }
   private schemaParser(schema:ISchema,parentKey?: string): Array<ISormComponents> {
     let {properties = {}} = schema
     let keys:Array<string> = Object.keys(properties)
@@ -73,14 +106,14 @@ class Sorm {
         title: label,
         "x-component": cname = "view",
         "x-component-props": cprops = {},
-        "x-component-props-expression": expression,
         "x-props": fieldProps,
         "x-rules": rules,
         properties: childrenSchema
       } = componentSchemaDesc
-
+      cprops.visible = cprops.visible === void(0) ? true : cprops.visible
+      let linkages = this.parseExpressions(cprops)
       let required = false
-
+      
       let field = this.core.registerField({
         name: thisKey,
         initialValue: cprops.value,
@@ -97,8 +130,8 @@ class Sorm {
         component: {
           name: cname,
           props: cprops,
-          expression
         },
+        linkages,
         required,
         hooks: [],
         listening: [],
@@ -208,49 +241,101 @@ const selfValidate = async function(validate:IValidate){
   }
 }
 
+const runCondition = function(condition: string, value: object): any{
+  return ExpressionRun(condition, {root:{value}})
+}
+
 export function getFieldMixins(){
-  let self
   return [{
-    didMount(){
+    async didMount(){
       let {
         component,
         getFormCore,
-        keyName
+        keyName,
+        linkages
       } = this.props
-
       let core = getFormCore()
-      core.subscribe(async ({
+
+      let updateProps = async (depsName?: string): Promise<{[key:string]: any}>=>{
+        return new Promise((resolve,reject)=>{
+          if(linkages.length > 0){
+            let state
+            core.getFormState(({values})=>{
+              console.log(values,"values")
+              
+              linkages
+                .filter(v => depsName ? v.deps.indexOf(depsName) > -1 : true)
+                .map(exporession => {
+                  let result = runCondition(exporession.exp, values)
+                  if(!state)state = {}
+                  state["cprops." + exporession.target] = result
+                })
+              // this.setData(state)
+              state && resolve(state)
+            })
+          }else{
+            reject(false)
+          }
+        })
+        
+      }
+
+      core.subscribe(({
         type,
         payload
       })=>{
         switch(type){
+          // 验证失败
           case CustomEventName.ValidatedError:
-            let [{path = "",messages = []} = {}] = (payload || []).filter(v => v.path === keyName)
-            if(path){
+            {
+              let [{path = "",messages = []} = {}] = (payload || []).filter(v => v.path === keyName)
+              if(path){
+                this.setData({
+                  isError: true,
+                  errors: messages
+                })
+              }
+            }
+            break;
+          // 值重设
+          case CustomEventName.SromRest:
+            {
+              let uiValue = (payload || {})[keyName] || ""
               this.setData({
-                isError: true,
-                errors: messages
+                isError: false,
+                errors: [],
+                uiValue,
+                fieldKey: keyName + Date.now()
               })
             }
             break;
-          case CustomEventName.SromRest:
-            let uiValue = (payload || {})[keyName] || ""
-            this.setData({
-              isError: false,
-              errors: [],
-              uiValue,
-              fieldKey: keyName + Date.now()
-            })
+          case LifeCycleTypes.ON_FORM_CHANGE:
+          {
+            let name = ((payload || {}).state || {}).name
+            updateProps(name).then(state=>{
+              this.setData({
+                ...state,
+                fieldKey: keyName + Date.now()
+              })
+            }).catch(()=>{})
+          } 
             break;
           default:
             break;
         }
       })
-
+      let cprops = {}
+      try{
+        cprops = await updateProps()
+      }catch(e){}
       this.setData({
         uiValue: component.props.value,
-        fieldKey: keyName + Date.now()
+        fieldKey: keyName + Date.now(),
+        cname: component.name,
+        cprops: component.props,
+        ...cprops
       })
+      
     },
     methods: {
       async onChange(e){
@@ -282,6 +367,7 @@ export function getFieldMixins(){
 export function getFieldGroupMixin(){
   return [{
     didMount(){
+      console.log("init")
       let {props} = this.props
       let {dataSource = [],value} = props
       let indexValue = 0

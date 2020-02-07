@@ -113,15 +113,15 @@
   />
 </template>
 
-<view class="fld">
+<view class="fld" a:if="{{cprops.visible}}">
   <view class="fld_wrap">
     <view class="fld_label">
       <text class="fld_lb_text fld_lb_wran" style="color:red;">{{required? '*': ''}}</text>
       <text class="fld_lb_text">{{label}}</text>
     </view>
     <view class="fld_com">
-      <template is="{{component.name}}" data="{{
-        props: component.props,
+      <template is="{{cname}}" data="{{
+        props: cprops,
         isError: isError,
         onChange:onChange,
         uiValue: uiValue,

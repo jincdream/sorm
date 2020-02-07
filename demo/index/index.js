@@ -20,7 +20,7 @@ Page({
           "x-component": "input",
           "x-component-props": {
             // "value": "{{root.fieldA === 'xxx' ? 0 : 1}}",
-            // "disabled": "{{root.fieldA > root.fieldB}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
+            "disabled": "{{root.value.switch == true}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
           },
           "x-rules": [{
             // "required": true
@@ -55,6 +55,7 @@ Page({
           "x-component": "radio-group",
           "x-component-props": {
             "value":"angular",
+            "disabled": "{{root.value.switch == true}}", //支持嵌套字段值获取，支持JS原生方法、逻辑表达式
             "dataSource": [
               { "value": "angular", "label": "AngularJS", "color": "red" },
               { "value": "react", "label": "React" },

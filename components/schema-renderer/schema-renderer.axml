@@ -3,6 +3,7 @@
     <!-- native items -->
     <field
       a:if="{{item._supported}}"
+      linkages="{{item.linkages}}"
       keyName="{{item.keyName}}"
       label="{{item.label}}"
       component="{{item.component}}"
@@ -15,6 +16,7 @@
     <view a:else>
       <slot
         name="items"
+        linkages="{{item.linkages}}"
         keyName="{{item.keyName}}"
         label="{{item.label}}"
         component="{{item.component}}"

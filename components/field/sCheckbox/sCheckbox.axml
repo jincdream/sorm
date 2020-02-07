@@ -5,7 +5,7 @@
     <checkbox
       value="{{index}}"
       checked="{{item.isDefault}}"
-      disabled="{{item.disabled}}"
+      disabled="{{props.disabled === undefined ? item.disabled : disabled}}"
       color="{{item.color}}" />
     <text class="checkbox-text">{{item.label}}</text>
   </label>

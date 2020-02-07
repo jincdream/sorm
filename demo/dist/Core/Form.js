@@ -1,7 +1,8 @@
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-import { createForm } from '@uform/core';
+import { createForm, LifeCycleTypes } from '@uform/core';
 import isEqual from 'lodash.isequal';
+import ExpressionRun from './ExpressionRun';
 var CustomEventName;
 
 (function (CustomEventName) {
@@ -48,6 +49,45 @@ function () {
     });
   };
 
+  _proto.parseExpressions = function parseExpressions(props) {
+    var linkages = []; // 花括号
+
+    var checkBrace = /^\{\{(.*?)\}\}$/; // root.value
+
+    var checkRoot = /root\.value\.(\S*)/g;
+    Object.keys(props).forEach(function (target) {
+      var deps = [];
+      var expression = {};
+      var value = props[target];
+
+      if (checkBrace.test(value) && checkRoot.test(value)) {
+        var exp = value.replace(checkBrace, "$1");
+        exp.replace(/root\.value\.([a-zA-Z]*)/g, function (m, a) {
+          if (a === void 0) {
+            a = "";
+          }
+
+          var _a$split = a.split("."),
+              _a$split$ = _a$split[0],
+              name = _a$split$ === void 0 ? "" : _a$split$;
+
+          if (deps) {
+            deps.push(name);
+          }
+        });
+
+        if (deps.length > 0) {
+          linkages.push({
+            exp: exp,
+            deps: deps,
+            target: target
+          });
+        }
+      }
+    });
+    return linkages;
+  };
+
   _proto.schemaParser = function schemaParser(schema, parentKey) {
     var _this = this;
 
@@ -63,10 +103,13 @@ function () {
           cname = _componentSchemaDesc$ === void 0 ? "view" : _componentSchemaDesc$,
           _componentSchemaDesc$2 = componentSchemaDesc["x-component-props"],
           cprops = _componentSchemaDesc$2 === void 0 ? {} : _componentSchemaDesc$2,
-          expression = componentSchemaDesc["x-component-props-expression"],
           fieldProps = componentSchemaDesc["x-props"],
           rules = componentSchemaDesc["x-rules"],
           childrenSchema = componentSchemaDesc.properties;
+      cprops.visible = cprops.visible === void 0 ? true : cprops.visible;
+
+      var linkages = _this.parseExpressions(cprops);
+
       var required = false;
 
       var field = _this.core.registerField({
@@ -84,9 +127,9 @@ function () {
         _supported: Supported[cname],
         component: {
           name: cname,
-          props: cprops,
-          expression: expression
+          props: cprops
         },
+        linkages: linkages,
         required: required,
         hooks: [],
         listening: [],
@@ -233,114 +276,190 @@ var selfValidate = function selfValidate(validate) {
   });
 };
 
+var runCondition = function runCondition(condition, value) {
+  return ExpressionRun(condition, {
+    root: {
+      value: value
+    }
+  });
+};
+
 export function getFieldMixins() {
-  var self;
   return [{
     didMount: function didMount() {
       var _this2 = this;
 
-      var _this$props2 = this.props,
-          component = _this$props2.component,
-          getFormCore = _this$props2.getFormCore,
-          keyName = _this$props2.keyName;
-      var core = getFormCore();
-      core.subscribe(function _callee(_ref) {
-        var type, payload, _filter, _filter$, _filter$$path, path, _filter$$messages, messages, uiValue;
+      var _this$props2, component, getFormCore, keyName, linkages, core, updateProps, cprops;
 
-        return regeneratorRuntime.async(function _callee$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                type = _ref.type, payload = _ref.payload;
-                _context3.t0 = type;
-                _context3.next = _context3.t0 === CustomEventName.ValidatedError ? 4 : _context3.t0 === CustomEventName.SromRest ? 9 : 12;
-                break;
+      return regeneratorRuntime.async(function didMount$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _this$props2 = this.props, component = _this$props2.component, getFormCore = _this$props2.getFormCore, keyName = _this$props2.keyName, linkages = _this$props2.linkages;
+              core = getFormCore();
 
-              case 4:
-                _filter = (payload || []).filter(function (v) {
-                  return v.path === keyName;
-                }), _filter$ = _filter[0];
-                _filter$ = _filter$ === void 0 ? {} : _filter$;
-                _filter$$path = _filter$.path, path = _filter$$path === void 0 ? "" : _filter$$path, _filter$$messages = _filter$.messages, messages = _filter$$messages === void 0 ? [] : _filter$$messages;
+              updateProps = function updateProps(depsName) {
+                return regeneratorRuntime.async(function updateProps$(_context3) {
+                  while (1) {
+                    switch (_context3.prev = _context3.next) {
+                      case 0:
+                        return _context3.abrupt("return", new Promise(function (resolve, reject) {
+                          if (linkages.length > 0) {
+                            var state;
+                            core.getFormState(function (_ref) {
+                              var values = _ref.values;
+                              console.log(values, "values");
+                              linkages.filter(function (v) {
+                                return depsName ? v.deps.indexOf(depsName) > -1 : true;
+                              }).map(function (exporession) {
+                                var result = runCondition(exporession.exp, values);
+                                if (!state) state = {};
+                                state["cprops." + exporession.target] = result;
+                              }); // this.setData(state)
 
-                if (path) {
-                  _this2.setData({
-                    isError: true,
-                    errors: messages
-                  });
-                }
+                              state && resolve(state);
+                            });
+                          } else {
+                            reject(false);
+                          }
+                        }));
 
-                return _context3.abrupt("break", 13);
-
-              case 9:
-                uiValue = (payload || {})[keyName] || "";
-
-                _this2.setData({
-                  isError: false,
-                  errors: [],
-                  uiValue: uiValue,
-                  fieldKey: keyName + Date.now()
+                      case 1:
+                      case "end":
+                        return _context3.stop();
+                    }
+                  }
                 });
+              };
 
-                return _context3.abrupt("break", 13);
+              core.subscribe(function (_ref2) {
+                var type = _ref2.type,
+                    payload = _ref2.payload;
 
-              case 12:
-                return _context3.abrupt("break", 13);
+                switch (type) {
+                  // 验证失败
+                  case CustomEventName.ValidatedError:
+                    {
+                      var _filter = (payload || []).filter(function (v) {
+                        return v.path === keyName;
+                      }),
+                          _filter$ = _filter[0];
 
-              case 13:
-              case "end":
-                return _context3.stop();
-            }
+                      _filter$ = _filter$ === void 0 ? {} : _filter$;
+                      var _filter$$path = _filter$.path,
+                          path = _filter$$path === void 0 ? "" : _filter$$path,
+                          _filter$$messages = _filter$.messages,
+                          messages = _filter$$messages === void 0 ? [] : _filter$$messages;
+
+                      if (path) {
+                        _this2.setData({
+                          isError: true,
+                          errors: messages
+                        });
+                      }
+                    }
+                    break;
+                  // 值重设
+
+                  case CustomEventName.SromRest:
+                    {
+                      var uiValue = (payload || {})[keyName] || "";
+
+                      _this2.setData({
+                        isError: false,
+                        errors: [],
+                        uiValue: uiValue,
+                        fieldKey: keyName + Date.now()
+                      });
+                    }
+                    break;
+
+                  case LifeCycleTypes.ON_FORM_CHANGE:
+                    {
+                      var name = ((payload || {}).state || {}).name;
+                      updateProps(name).then(function (state) {
+                        _this2.setData(_extends({}, state, {
+                          fieldKey: keyName + Date.now()
+                        }));
+                      })["catch"](function () {});
+                    }
+                    break;
+
+                  default:
+                    break;
+                }
+              });
+              cprops = {};
+              _context4.prev = 5;
+              _context4.next = 8;
+              return regeneratorRuntime.awrap(updateProps());
+
+            case 8:
+              cprops = _context4.sent;
+              _context4.next = 13;
+              break;
+
+            case 11:
+              _context4.prev = 11;
+              _context4.t0 = _context4["catch"](5);
+
+            case 13:
+              this.setData(_extends({
+                uiValue: component.props.value,
+                fieldKey: keyName + Date.now(),
+                cname: component.name,
+                cprops: component.props
+              }, cprops));
+
+            case 14:
+            case "end":
+              return _context4.stop();
           }
-        });
-      });
-      this.setData({
-        uiValue: component.props.value,
-        fieldKey: keyName + Date.now()
-      });
+        }
+      }, null, this, [[5, 11]]);
     },
     methods: {
       onChange: function onChange(e) {
         var _this$props3, getFormCore, keyName, validate, value, core, res;
 
-        return regeneratorRuntime.async(function onChange$(_context5) {
+        return regeneratorRuntime.async(function onChange$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 _this$props3 = this.props, getFormCore = _this$props3.getFormCore, keyName = _this$props3.keyName, validate = _this$props3.validate;
                 value = e.detail ? e.detail.value : e.value;
                 core = getFormCore(); // setFieldValue(value)
 
                 core.setFieldValue(keyName, value);
-                _context5.next = 6;
-                return regeneratorRuntime.awrap(selfValidate(function _callee2() {
-                  return regeneratorRuntime.async(function _callee2$(_context4) {
+                _context6.next = 6;
+                return regeneratorRuntime.awrap(selfValidate(function _callee() {
+                  return regeneratorRuntime.async(function _callee$(_context5) {
                     while (1) {
-                      switch (_context4.prev = _context4.next) {
+                      switch (_context5.prev = _context5.next) {
                         case 0:
-                          _context4.next = 2;
+                          _context5.next = 2;
                           return regeneratorRuntime.awrap(core.validate(keyName));
 
                         case 2:
-                          return _context4.abrupt("return", _context4.sent);
+                          return _context5.abrupt("return", _context5.sent);
 
                         case 3:
                         case "end":
-                          return _context4.stop();
+                          return _context5.stop();
                       }
                     }
                   });
                 }));
 
               case 6:
-                res = _context5.sent;
+                res = _context6.sent;
                 this.setData(_extends({
                   uiValue: value
                 }, res));
 
               case 8:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
         }, null, this);
@@ -356,6 +475,7 @@ export function getFieldMixins() {
 export function getFieldGroupMixin() {
   return [{
     didMount: function didMount() {
+      console.log("init");
       var props = this.props.props;
       var _props$dataSource = props.dataSource,
           dataSource = _props$dataSource === void 0 ? [] : _props$dataSource,

@@ -166,7 +166,7 @@ export interface IFieldProps{
   keyName: string,
   value: string,
   validate: IValidate,
-  
+  linkages: Array<IExporession>
   saveRef: (ref: any)=>{}
 }
 
@@ -205,4 +205,9 @@ export interface IFieldGroupProps<T>{
     dataSource: Array<IDataSource>,
   }
   onChange: (e: any) => {}
+}
+export interface IExporession{
+  exp: string,
+  deps: Array<string>,
+  target: string
 }
