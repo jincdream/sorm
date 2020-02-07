@@ -1,6 +1,6 @@
 {
   "name": "miniapp-schema-form",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "小程序动态表单组件",
   "repository": {
     "type": "git",
@@ -21,10 +21,6 @@
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-typescript": "^7.1.0",
-    "eslint": "^5.16.0",
-    "eslint-config-ali": "^3.1.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-typescript": "^0.14.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^4.0.0",
