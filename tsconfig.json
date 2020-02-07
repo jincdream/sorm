@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "es5",
+    "target": "ES5",
     "lib": ["es5", "es6", "WebWorker"],
     "noImplicitThis": true,
     "noImplicitUseStrict": true,
