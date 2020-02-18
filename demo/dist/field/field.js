@@ -4,8 +4,7 @@ Component({
   data: {},
   props: {},
 
-  didMount() {// console.log(this.props)
-  },
+  didMount() {},
 
   didUpdate() {},
 

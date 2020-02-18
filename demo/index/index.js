@@ -189,8 +189,6 @@ Page({
     this.data.schema.properties.custom["x-component"] = "input"
     this.setData({
       schema: {...this.data.schema}
-    },()=>{
-      console.log(this.data,"ss")
     })
     
   },
