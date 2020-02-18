@@ -57,7 +57,6 @@ class Sorm {
       },
       //表单校验失败事件回调
       onValidateFailed:(validated) => {
-        console.log(validated)
       }
     })
   }
@@ -231,7 +230,14 @@ export function getFormMixins(){
 }
 
 const selfValidate = async function(validate:IValidate){
-  let res = await validate()
+  let res
+  try{
+    res = await validate()
+    
+  } catch (error) {
+    console.error(error)
+    res = error
+  }
   let { errors = [] } = res
   let errData = errors[0] || {messages:[]}
   let isError = res.errors.length > 0
@@ -239,6 +245,7 @@ const selfValidate = async function(validate:IValidate){
     isError,
     errors: errData.messages
   }
+  
 }
 
 const runCondition = function(condition: string, value: object): any{
@@ -261,8 +268,6 @@ export function getFieldMixins(){
           if(linkages.length > 0){
             let state
             core.getFormState(({values})=>{
-              console.log(values,"values")
-              
               linkages
                 .filter(v => depsName ? v.deps.indexOf(depsName) > -1 : true)
                 .map(exporession => {
@@ -284,15 +289,18 @@ export function getFieldMixins(){
         type,
         payload
       })=>{
+
         switch(type){
           // 验证失败
           case CustomEventName.ValidatedError:
+          console.log(payload,"path")
+
             {
               let [{path = "",messages = []} = {}] = (payload || []).filter(v => v.path === keyName)
               if(path){
                 this.setData({
                   isError: true,
-                  errors: messages
+                  errors: messages,
                 })
               }
             }
@@ -367,7 +375,6 @@ export function getFieldMixins(){
 export function getFieldGroupMixin(){
   return [{
     didMount(){
-      console.log("init")
       let {props} = this.props
       let {dataSource = [],value} = props
       let indexValue = 0

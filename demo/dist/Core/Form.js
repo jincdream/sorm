@@ -1,5 +1,9 @@
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 import { createForm, LifeCycleTypes } from '@uform/core';
 import isEqual from 'lodash.isequal';
 import ExpressionRun from './ExpressionRun';
@@ -17,7 +21,7 @@ var Supported = {
   radioGroup: true,
   checkbox: true,
   checkboxGroup: true,
-  "switch": true,
+  switch: true,
   slider: true,
   pickerView: true,
   picker: true,
@@ -28,34 +32,28 @@ var Supported = {
   "picker-view": true
 };
 
-var Sorm =
-/*#__PURE__*/
-function () {
-  function Sorm() {}
+class Sorm {
+  constructor() {}
 
-  var _proto = Sorm.prototype;
-
-  _proto.init = function init() {
+  init() {
     this.core = createForm({
-      onChange: function onChange(values) {},
+      onChange: values => {},
       //表单提交事件回调
-      onSubmit: function onSubmit(values) {},
+      onSubmit: values => {},
       //表单重置事件回调
-      onReset: function onReset() {},
+      onReset: () => {},
       //表单校验失败事件回调
-      onValidateFailed: function onValidateFailed(validated) {
-        console.log(validated);
-      }
+      onValidateFailed: validated => {}
     });
-  };
+  }
 
-  _proto.parseExpressions = function parseExpressions(props) {
+  parseExpressions(props) {
     var linkages = []; // 花括号
 
     var checkBrace = /^\{\{(.*?)\}\}$/; // root.value
 
     var checkRoot = /root\.value\.(\S*)/g;
-    Object.keys(props).forEach(function (target) {
+    Object.keys(props).forEach(target => {
       var deps = [];
       var expression = {};
       var value = props[target];
@@ -67,9 +65,7 @@ function () {
             a = "";
           }
 
-          var _a$split = a.split("."),
-              _a$split$ = _a$split[0],
-              name = _a$split$ === void 0 ? "" : _a$split$;
+          var [name = ""] = a.split(".");
 
           if (deps) {
             deps.push(name);
@@ -78,48 +74,43 @@ function () {
 
         if (deps.length > 0) {
           linkages.push({
-            exp: exp,
-            deps: deps,
+            exp,
+            deps,
             target: target
           });
         }
       }
     });
     return linkages;
-  };
+  }
 
-  _proto.schemaParser = function schemaParser(schema, parentKey) {
-    var _this = this;
-
-    var _schema$properties = schema.properties,
-        properties = _schema$properties === void 0 ? {} : _schema$properties;
+  schemaParser(schema, parentKey) {
+    var {
+      properties = {}
+    } = schema;
     var keys = Object.keys(properties);
-    return keys.map(function (keyName, index) {
+    return keys.map((keyName, index) => {
       var componentSchemaDesc = properties[keyName];
       var thisKey = parentKey ? parentKey + '.' + keyName : keyName;
-      var formType = componentSchemaDesc.type,
-          label = componentSchemaDesc.title,
-          _componentSchemaDesc$ = componentSchemaDesc["x-component"],
-          cname = _componentSchemaDesc$ === void 0 ? "view" : _componentSchemaDesc$,
-          _componentSchemaDesc$2 = componentSchemaDesc["x-component-props"],
-          cprops = _componentSchemaDesc$2 === void 0 ? {} : _componentSchemaDesc$2,
-          fieldProps = componentSchemaDesc["x-props"],
-          rules = componentSchemaDesc["x-rules"],
-          childrenSchema = componentSchemaDesc.properties;
+      var {
+        type: formType,
+        title: label,
+        "x-component": cname = "view",
+        "x-component-props": cprops = {},
+        "x-props": fieldProps,
+        "x-rules": rules,
+        properties: childrenSchema
+      } = componentSchemaDesc;
       cprops.visible = cprops.visible === void 0 ? true : cprops.visible;
-
-      var linkages = _this.parseExpressions(cprops);
-
+      var linkages = this.parseExpressions(cprops);
       var required = false;
-
-      var field = _this.core.registerField({
+      var field = this.core.registerField({
         name: thisKey,
         initialValue: cprops.value,
         value: cprops.value,
         rules: rules
       });
-
-      field.getState(function (state) {
+      field.getState(state => {
         required = state.required;
       });
       cname = cname.toLocaleLowerCase();
@@ -129,17 +120,17 @@ function () {
           name: cname,
           props: cprops
         },
-        linkages: linkages,
-        required: required,
+        linkages,
+        required,
         hooks: [],
         listening: [],
         keyName: thisKey,
-        label: label,
-        formType: formType,
-        fieldProps: fieldProps,
-        childrends: _this.schemaParser(componentSchemaDesc, parentKey),
-        getFormCore: function getFormCore() {
-          return _this.getCore();
+        label,
+        formType,
+        fieldProps,
+        childrends: this.schemaParser(componentSchemaDesc, parentKey),
+        getFormCore: () => {
+          return this.getCore();
         }
       };
     });
@@ -147,76 +138,76 @@ function () {
   /**
    * getValues
    */
-  ;
 
-  _proto.getValues = function getValues() {
+
+  getValues() {
     return this.initValue;
-  };
+  }
 
-  _proto.getCore = function getCore() {
+  getCore() {
     return this.core;
-  };
+  }
 
-  _proto.parse = function parse(schema) {
+  parse(schema) {
     this._schema = schema;
     return this.schemaParser(schema);
-  };
+  }
 
-  return Sorm;
-}();
+}
 
 var InitForm = function InitForm(ref) {
-  var _ref$props = ref.props,
-      schema = _ref$props.schema,
-      style = _ref$props.style,
-      className = _ref$props["class"],
-      onSubmit = _ref$props.onSubmit;
-  var sorm = ref.sorm;
+  var {
+    schema,
+    style,
+    class: className,
+    onSubmit
+  } = ref.props;
+  var {
+    sorm
+  } = ref;
   sorm.init();
   var formCore = sorm.getCore();
   var components = sorm.parse(schema);
   ref.setData({
     schema: components,
-    style: style,
-    className: className,
+    style,
+    className,
     schemaKey: Date.now().toString(32),
     useButton: !!onSubmit,
-    submit: function submit() {
+    submit: () => {
       ref.submit();
     },
-    reset: function reset() {
+    reset: () => {
       ref.reset();
     },
-    getValues: function getValues() {
-      return regeneratorRuntime.async(function getValues$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              return _context.abrupt("return", new Promise(function (resolve, reject) {
-                sorm.getCore().getFormState(function (state) {
-                  resolve(state.values);
-                });
-              }));
-
-            case 1:
-            case "end":
-              return _context.stop();
-          }
-        }
+    getValues: function () {
+      var _getValues = _asyncToGenerator(function* () {
+        return new Promise((resolve, reject) => {
+          sorm.getCore().getFormState(state => {
+            resolve(state.values);
+          });
+        });
       });
-    }
+
+      function getValues() {
+        return _getValues.apply(this, arguments);
+      }
+
+      return getValues;
+    }()
   });
 };
 
 export function getFormMixins() {
   var sorm = new Sorm();
   return [{
-    didMount: function didMount() {
+    didMount() {
       this.init = true;
       this.sorm = sorm;
       InitForm(this);
     },
-    didUpdate: function didUpdate(props) {
+
+    didUpdate(props) {
       if (this.init) {
         this.init = false;
         return;
@@ -225,265 +216,235 @@ export function getFormMixins() {
       InitForm(this);
       this.init = true;
     },
+
     methods: {
-      reset: function reset() {
+      reset() {
         InitForm(this);
         this.init = true;
       },
-      submit: function submit() {
+
+      submit() {
         var core = sorm.getCore();
-        var _this$props = this.props,
-            onSubmit = _this$props.onSubmit,
-            onError = _this$props.onError;
-        core.submit(function (res) {
+        var {
+          onSubmit,
+          onError
+        } = this.props;
+        core.submit(res => {
           onSubmit && onSubmit(res);
-        })["catch"](function (err) {
+        }).catch(err => {
           core.notify(CustomEventName.ValidatedError, err);
           onError && onError(err);
         });
       }
+
     }
   }];
 }
 
-var selfValidate = function selfValidate(validate) {
-  var res, _res$errors, errors, errData, isError;
+var selfValidate =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(function* (validate) {
+    var res;
 
-  return regeneratorRuntime.async(function selfValidate$(_context2) {
-    while (1) {
-      switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.next = 2;
-          return regeneratorRuntime.awrap(validate());
-
-        case 2:
-          res = _context2.sent;
-          _res$errors = res.errors, errors = _res$errors === void 0 ? [] : _res$errors;
-          errData = errors[0] || {
-            messages: []
-          };
-          isError = res.errors.length > 0;
-          return _context2.abrupt("return", {
-            isError: isError,
-            errors: errData.messages
-          });
-
-        case 7:
-        case "end":
-          return _context2.stop();
-      }
+    try {
+      res = yield validate();
+    } catch (error) {
+      console.error(error);
+      res = error;
     }
+
+    var {
+      errors = []
+    } = res;
+    var errData = errors[0] || {
+      messages: []
+    };
+    var isError = res.errors.length > 0;
+    return {
+      isError,
+      errors: errData.messages
+    };
   });
-};
+
+  return function selfValidate(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
 
 var runCondition = function runCondition(condition, value) {
   return ExpressionRun(condition, {
     root: {
-      value: value
+      value
     }
   });
 };
 
 export function getFieldMixins() {
   return [{
-    didMount: function didMount() {
-      var _this2 = this;
+    didMount() {
+      var _this = this;
 
-      var _this$props2, component, getFormCore, keyName, linkages, core, updateProps, cprops;
+      return _asyncToGenerator(function* () {
+        var {
+          component,
+          getFormCore,
+          keyName,
+          linkages
+        } = _this.props;
+        var core = getFormCore();
 
-      return regeneratorRuntime.async(function didMount$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _this$props2 = this.props, component = _this$props2.component, getFormCore = _this$props2.getFormCore, keyName = _this$props2.keyName, linkages = _this$props2.linkages;
-              core = getFormCore();
+        var updateProps =
+        /*#__PURE__*/
+        function () {
+          var _ref2 = _asyncToGenerator(function* (depsName) {
+            return new Promise((resolve, reject) => {
+              if (linkages.length > 0) {
+                var state;
+                core.getFormState((_ref3) => {
+                  var {
+                    values
+                  } = _ref3;
+                  linkages.filter(v => depsName ? v.deps.indexOf(depsName) > -1 : true).map(exporession => {
+                    var result = runCondition(exporession.exp, values);
+                    if (!state) state = {};
+                    state["cprops." + exporession.target] = result;
+                  }); // this.setData(state)
 
-              updateProps = function updateProps(depsName) {
-                return regeneratorRuntime.async(function updateProps$(_context3) {
-                  while (1) {
-                    switch (_context3.prev = _context3.next) {
-                      case 0:
-                        return _context3.abrupt("return", new Promise(function (resolve, reject) {
-                          if (linkages.length > 0) {
-                            var state;
-                            core.getFormState(function (_ref) {
-                              var values = _ref.values;
-                              console.log(values, "values");
-                              linkages.filter(function (v) {
-                                return depsName ? v.deps.indexOf(depsName) > -1 : true;
-                              }).map(function (exporession) {
-                                var result = runCondition(exporession.exp, values);
-                                if (!state) state = {};
-                                state["cprops." + exporession.target] = result;
-                              }); // this.setData(state)
-
-                              state && resolve(state);
-                            });
-                          } else {
-                            reject(false);
-                          }
-                        }));
-
-                      case 1:
-                      case "end":
-                        return _context3.stop();
-                    }
-                  }
+                  state && resolve(state);
                 });
-              };
+              } else {
+                reject(false);
+              }
+            });
+          });
 
-              core.subscribe(function (_ref2) {
-                var type = _ref2.type,
-                    payload = _ref2.payload;
+          return function updateProps(_x2) {
+            return _ref2.apply(this, arguments);
+          };
+        }();
 
-                switch (type) {
-                  // 验证失败
-                  case CustomEventName.ValidatedError:
-                    {
-                      var _filter = (payload || []).filter(function (v) {
-                        return v.path === keyName;
-                      }),
-                          _filter$ = _filter[0];
+        core.subscribe((_ref4) => {
+          var {
+            type,
+            payload
+          } = _ref4;
 
-                      _filter$ = _filter$ === void 0 ? {} : _filter$;
-                      var _filter$$path = _filter$.path,
-                          path = _filter$$path === void 0 ? "" : _filter$$path,
-                          _filter$$messages = _filter$.messages,
-                          messages = _filter$$messages === void 0 ? [] : _filter$$messages;
+          switch (type) {
+            // 验证失败
+            case CustomEventName.ValidatedError:
+              console.log(payload, "path");
+              {
+                var [{
+                  path = "",
+                  messages = []
+                } = {}] = (payload || []).filter(v => v.path === keyName);
 
-                      if (path) {
-                        _this2.setData({
-                          isError: true,
-                          errors: messages
-                        });
-                      }
-                    }
-                    break;
-                  // 值重设
-
-                  case CustomEventName.SromRest:
-                    {
-                      var uiValue = (payload || {})[keyName] || "";
-
-                      _this2.setData({
-                        isError: false,
-                        errors: [],
-                        uiValue: uiValue,
-                        fieldKey: keyName + Date.now()
-                      });
-                    }
-                    break;
-
-                  case LifeCycleTypes.ON_FORM_CHANGE:
-                    {
-                      var name = ((payload || {}).state || {}).name;
-                      updateProps(name).then(function (state) {
-                        _this2.setData(_extends({}, state, {
-                          fieldKey: keyName + Date.now()
-                        }));
-                      })["catch"](function () {});
-                    }
-                    break;
-
-                  default:
-                    break;
+                if (path) {
+                  _this.setData({
+                    isError: true,
+                    errors: messages
+                  });
                 }
-              });
-              cprops = {};
-              _context4.prev = 5;
-              _context4.next = 8;
-              return regeneratorRuntime.awrap(updateProps());
+              }
+              break;
+            // 值重设
 
-            case 8:
-              cprops = _context4.sent;
-              _context4.next = 13;
+            case CustomEventName.SromRest:
+              {
+                var uiValue = (payload || {})[keyName] || "";
+
+                _this.setData({
+                  isError: false,
+                  errors: [],
+                  uiValue,
+                  fieldKey: keyName + Date.now()
+                });
+              }
               break;
 
-            case 11:
-              _context4.prev = 11;
-              _context4.t0 = _context4["catch"](5);
+            case LifeCycleTypes.ON_FORM_CHANGE:
+              {
+                var name = ((payload || {}).state || {}).name;
+                updateProps(name).then(state => {
+                  _this.setData(_extends({}, state, {
+                    fieldKey: keyName + Date.now()
+                  }));
+                }).catch(() => {});
+              }
+              break;
 
-            case 13:
-              this.setData(_extends({
-                uiValue: component.props.value,
-                fieldKey: keyName + Date.now(),
-                cname: component.name,
-                cprops: component.props
-              }, cprops));
-
-            case 14:
-            case "end":
-              return _context4.stop();
+            default:
+              break;
           }
-        }
-      }, null, this, [[5, 11]]);
+        });
+        var cprops = {};
+
+        try {
+          cprops = yield updateProps();
+        } catch (e) {}
+
+        _this.setData(_extends({
+          uiValue: component.props.value,
+          fieldKey: keyName + Date.now(),
+          cname: component.name,
+          cprops: component.props
+        }, cprops));
+      })();
     },
+
     methods: {
-      onChange: function onChange(e) {
-        var _this$props3, getFormCore, keyName, validate, value, core, res;
+      onChange(e) {
+        var _this2 = this;
 
-        return regeneratorRuntime.async(function onChange$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                _this$props3 = this.props, getFormCore = _this$props3.getFormCore, keyName = _this$props3.keyName, validate = _this$props3.validate;
-                value = e.detail ? e.detail.value : e.value;
-                core = getFormCore(); // setFieldValue(value)
+        return _asyncToGenerator(function* () {
+          var {
+            getFormCore,
+            keyName,
+            validate
+          } = _this2.props;
+          var value = e.detail ? e.detail.value : e.value;
+          var core = getFormCore(); // setFieldValue(value)
 
-                core.setFieldValue(keyName, value);
-                _context6.next = 6;
-                return regeneratorRuntime.awrap(selfValidate(function _callee() {
-                  return regeneratorRuntime.async(function _callee$(_context5) {
-                    while (1) {
-                      switch (_context5.prev = _context5.next) {
-                        case 0:
-                          _context5.next = 2;
-                          return regeneratorRuntime.awrap(core.validate(keyName));
+          core.setFieldValue(keyName, value);
+          var res = yield selfValidate(
+          /*#__PURE__*/
+          _asyncToGenerator(function* () {
+            return yield core.validate(keyName);
+          }));
 
-                        case 2:
-                          return _context5.abrupt("return", _context5.sent);
-
-                        case 3:
-                        case "end":
-                          return _context5.stop();
-                      }
-                    }
-                  });
-                }));
-
-              case 6:
-                res = _context6.sent;
-                this.setData(_extends({
-                  uiValue: value
-                }, res));
-
-              case 8:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, null, this);
+          _this2.setData(_extends({
+            uiValue: value
+          }, res));
+        })();
       },
-      onBlur: function onBlur(e) {},
-      onFocus: function onFocus(e) {},
-      onConfirm: function onConfirm(e) {},
-      onChanging: function onChanging(e) {}
+
+      onBlur(e) {},
+
+      onFocus(e) {},
+
+      onConfirm(e) {},
+
+      onChanging(e) {}
+
     }
   }];
 } // 多选一
 
 export function getFieldGroupMixin() {
   return [{
-    didMount: function didMount() {
-      console.log("init");
-      var props = this.props.props;
-      var _props$dataSource = props.dataSource,
-          dataSource = _props$dataSource === void 0 ? [] : _props$dataSource,
-          value = props.value;
+    didMount() {
+      var {
+        props
+      } = this.props;
+      var {
+        dataSource = [],
+        value
+      } = props;
       var indexValue = 0;
       var labelValue = (dataSource[0] || {}).label || "";
 
-      var _dataSource = dataSource.map(function (v, index) {
+      var _dataSource = dataSource.map((v, index) => {
         var isDefault = false;
 
         if (v.value === value) {
@@ -494,20 +455,23 @@ export function getFieldGroupMixin() {
 
         return _extends({}, v, {
           id: index,
-          isDefault: isDefault
+          isDefault
         });
       });
 
       this.setData({
         dataSource: _dataSource,
-        value: value,
-        indexValue: indexValue,
-        labelValue: labelValue
+        value,
+        indexValue,
+        labelValue
       });
     },
+
     methods: {
-      onChange: function onChange(e) {
-        var indexValue = e.detail.value;
+      onChange(e) {
+        var {
+          value: indexValue
+        } = e.detail;
         var valueObj = this.data.dataSource[indexValue];
         var formValue = valueObj.value;
         var labelValue = valueObj.label;
@@ -515,22 +479,26 @@ export function getFieldGroupMixin() {
           value: formValue
         });
         this.setData({
-          indexValue: indexValue,
+          indexValue,
           value: formValue,
-          labelValue: labelValue
+          labelValue
         });
       }
+
     }
   }];
 } // 多选多
 
 export function getFieldGroupArrayMixin() {
   return [{
-    didMount: function didMount() {
-      var props = this.props.props;
-      var _props$dataSource2 = props.dataSource,
-          dataSource = _props$dataSource2 === void 0 ? [] : _props$dataSource2,
-          value = props.value;
+    didMount() {
+      var {
+        props
+      } = this.props;
+      var {
+        dataSource = [],
+        value
+      } = props;
       var indexValue = [];
       var isArrayValue = Array.isArray(value);
 
@@ -538,13 +506,11 @@ export function getFieldGroupArrayMixin() {
         console.error("[value init error]: 非数组值");
       }
 
-      var _dataSource = dataSource.map(function (v, index) {
+      var _dataSource = dataSource.map((v, index) => {
         var isDefault = false;
 
         if (isArrayValue) {
-          if (value.some(function (defaultValue) {
-            return isEqual(defaultValue, v.value);
-          })) {
+          if (value.some(defaultValue => isEqual(defaultValue, v.value))) {
             isDefault = true;
             indexValue.push(index);
           }
@@ -552,30 +518,29 @@ export function getFieldGroupArrayMixin() {
 
         return _extends({}, v, {
           id: index,
-          isDefault: isDefault
+          isDefault
         });
       });
 
       this.setData({
         dataSource: _dataSource,
-        indexValue: indexValue,
-        value: value
+        indexValue,
+        value
       });
     },
-    methods: {
-      onChange: function onChange(e) {
-        var _this3 = this;
 
+    methods: {
+      onChange(e) {
         // let {limit = Number.MAX_SAFE_INTEGER} = this.props.props
-        var indexValue = e.detail.value;
+        var {
+          value: indexValue
+        } = e.detail;
 
         if (!Array.isArray(indexValue)) {
           return console.error("[value change error]: \u975E\u6570\u7EC4\u503C");
         }
 
-        var values = indexValue.map(function (v, index) {
-          return _this3.data.dataSource[index].value;
-        }); // if(values.length > limit)return my.alert({
+        var values = indexValue.map((v, index) => this.data.dataSource[index].value); // if(values.length > limit)return my.alert({
         //   title: `最多只能选择${limit}项`
         // })
 
@@ -583,6 +548,7 @@ export function getFieldGroupArrayMixin() {
           value: values
         });
       }
+
     }
   }];
 }
