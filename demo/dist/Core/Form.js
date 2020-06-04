@@ -37,7 +37,9 @@ class Sorm {
 
   init() {
     this.core = createForm({
-      onChange: values => {},
+      onChange: values => {
+        console.log(values);
+      },
       //表单提交事件回调
       onSubmit: values => {},
       //表单重置事件回调

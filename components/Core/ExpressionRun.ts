@@ -1,4 +1,4 @@
-import * as acorn from 'acorn'
+import * as esprima from 'esprima'
 
 const Compare = function(left: any, operator: string ,right: any){
   switch(operator){
@@ -90,7 +90,7 @@ const run = function(node, objValue = {}){
 }
 
 export default function ExpressionRun(expression: string, value){
-  let node = acorn.parse(expression).body[0]
+  let node = esprima.parseScript(expression).body[0]
   if(node.type !== "ExpressionStatement")return false
   return run(node.expression, value)
 }

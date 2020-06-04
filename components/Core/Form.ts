@@ -45,7 +45,7 @@ class Sorm {
   public init(){
     this.core = createForm({
       onChange: (values) => {
-
+        console.log(values)
       },
       //表单提交事件回调
       onSubmit: (values) => {
